@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 project(graphicsBCJ)
 
-add_subdirectory(petesCode/cs5721GraphicsLib)
-add_subdirectory(raytracer)
-
-SET(CMAKE_CXX_FLAGS "-gWall")
 SET (Boost_MULTITHREADED TRUE)
 
 # If you want to get more info on what the Find Boost macro is
@@ -19,3 +15,10 @@ FIND_PACKAGE(Boost REQUIRED date_time program_options system thread unit_test_fr
 IF(${Boost_FOUND})
   INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 ENDIF()
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/petesCode/cs5721GraphicsLib/src)
+LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
+
+ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib)
+
+ADD_SUBDIRECTORY(raytracer)
