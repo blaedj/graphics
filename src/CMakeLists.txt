@@ -19,6 +19,5 @@ ENDIF()
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/petesCode/cs5721GraphicsLib/src)
 LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
 
-ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib)
-
 ADD_SUBDIRECTORY(raytracer)
+ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib/)

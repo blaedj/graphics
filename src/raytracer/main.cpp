@@ -29,6 +29,7 @@
 #include "Vector3D.h"
 
 using namespace sivelab;
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -36,58 +37,47 @@ int main(int argc, char *argv[])
   args.process(argc, argv);
 
   //
-  // Create a red image
+  // Create a green
   //
-  // int w = args.width, h = args.height;
-  // png::image< png::rgb_pixel > imData( w, h );
-  // for (size_t y = 0; y < imData.get_height(); ++y)
-  //   {
-  //     for (size_t x = 0; x < imData.get_width(); ++x)
-  // 	{
-  // 	  // non-checking equivalent of image.set_pixel(x, y, ...);
-  // 	  imData[y][x] = png::rgb_pixel(255, 0, 0);
-  // 	}
-  //   }
-  // imData.write( "red_DualLoop.png" );
-
-  //
-  // Alternatively, you can do the same using a single loop:
-  //
+  int w = args.width, h = args.height;
+  png::image< png::rgb_pixel > imData( w, h );
   // for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
   //   {
   //     size_t x = idx % w;
   //     size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
 
   //     // non-checking equivalent of image.set_pixel(x, y, ...);
-  // 	imData[y][x] = png::rgb_pixel(0, 255, 0);
+  //     imData[y][x] = png::rgb_pixel(0, 255, 0);
   //   }
   // imData.write( "green_SingleLoop.png" );
 
-
+  string ss = "new string";
 
   //
   // create an image with random colors in every pixel
   //
-  // Random prng;
-  // for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
-  //   {
-  //     size_t x = idx % w;
-  //     size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
+  Random prng;
+  for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
+    {
+      size_t x = idx % w;
+      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
 
-  //     // assert((y >= 0) && (y < h) && x >= 0 && x < w);
+      // assert((y >= 0) && (y < h) && x >= 0 && x < w);
 
-  //     Vector3D c(static_cast<int>(floor(prng.uniform() * 255)),
-  // 		 static_cast<int>(floor(prng.uniform() * 255)),
-  // 		 static_cast<int>(floor(prng.uniform() * 255)));
+      Vector3D c(static_cast<int>(floor(prng.uniform() * 255)),
+  		 static_cast<int>(floor(prng.uniform() * 255)),
+  		 static_cast<int>(floor(prng.uniform() * 255)));
 
-  //     // The origin for indexing the height is in lower left...
-  //     imData[y][x] = png::rgb_pixel( c[0],
-  // 				     c[1],
-  // 				     c[2] );
-  //   }
+      // The origin for indexing the height is in lower left...
+      imData[y][x] = png::rgb_pixel( c[0],
+  				     c[1],
+  				     c[2] );
+    }
 
-  // imData.write( "random.png" );
+  imData.write( "random.png" );
 
+
+  //========================
   // for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
   //   {
   //     size_t x = idx % w;
@@ -110,6 +100,8 @@ int main(int argc, char *argv[])
   //   }
 
   // imData.write( "radial_Center.png" );
+  //=======================
+
 
   // Creates a radial gradient image from the origin of the image.
   // Note that the origin is in the upper left.
