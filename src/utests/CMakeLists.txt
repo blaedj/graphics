@@ -14,6 +14,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/raytracer)
 #
 set(UNITSPECS
   Succeed_spec
+  camera_spec
   )
 
 #
