@@ -4,6 +4,8 @@
 #include "basis.h"
 #include "Vector3D.h"
 
+#include "ray.h"
+
 using namespace sivelab;
 
 namespace raytracer {
@@ -11,20 +13,24 @@ namespace raytracer {
   {
   public:
     //! Default Constructor
-    Camera();
+    Camera() {};
 
     //! Constructor from only the location.
-    Camera(Vector3D location);
+    Camera(Vector3D location) {};
 
-    virtual ~Camera();
+    //! Constructor from camera location and direction.
+    Camera(Vector3D location, Vector3D direction) {};
 
-    bool CameraIsValid();
-    Vector3D getNonColinear(Vector3D vector);
+    virtual ~Camera() {}
 
-    Basis orthonormal;
-    double aX;
-    double aY;
-    double aZ;
+    Ray computeRay(int i, int j){};
+
+    Basis camerasOrigin;
+    Vector3D location;
+    Vector3D viewDirection;
+    float focalLength;
+    float imagePlaneWidth;
+    Basis orthoBasis;
 
   private:
 
