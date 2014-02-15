@@ -10,6 +10,7 @@ namespace raytracer {
   PerspectiveCamera::PerspectiveCamera() {
     location = Vector3D();
     viewDirection = Vector3D(0.0,0.0,-1.0);
+    this->orthoBasis = Basis();
   }
 
   PerspectiveCamera::PerspectiveCamera(sivelab::Vector3D location) {
