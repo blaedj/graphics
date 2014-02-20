@@ -9,11 +9,14 @@
 #include "camera.h"
 #include "orthographic_camera.h"
 #include "perspective_camera.h"
+#include "camera_creator.h"
+#include "XMLSceneParser.h"
+#include "handleGraphicsArgs.h"
+
 
 using namespace sivelab;
 using namespace std;
 using namespace raytracer;
-
 
 void testOrthographicRayCompute(int h, int w, png::image<png::rgb_pixel> imData)
 {
@@ -62,12 +65,14 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData)
       Ray r = cam->computeRay(x, y);
 
       Vector3D k = r.direction;
+      cout << k << endl;
+      // cout << k[0] << endl;
+      // cout << k[1] << endl;
+      // cout << k[2] << endl;
+
+
       k.normalize();
       k.set(k[0] * 0.5 + .5, k[1] * .5 + .5, k[2] * 0.5 + .5);
-
-      cout << k[0] << endl;
-      cout << k[1] << endl;
-      cout << k[2] << endl;
 
       imData[y][x] = png::rgb_pixel( k[0] * 255.0,
 				     k[1] * 255.0,
@@ -76,17 +81,24 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData)
   imData.write("perspectiveraygeneration.png");
 }
 
+void testXMLparsing(string fileName){
+  XMLSceneParser xmlParser;
+  xmlParser.registerCallback("camera", new CameraCreator);
+  xmlParser.parseFile(fileName);
+}
 
 
 int main(int argc, char *argv[])
 {
   GraphicsArgs args;
   args.process(argc, argv);
-  int w = args.width, h = args.height;
+  float w = args.width;
+  float h = args.height;
   png::image< png::rgb_pixel > imData( w, h );
-  cout << w << endl;
-  cout << h << endl;
-  testOrthographicRayCompute(h, w, imData);
+  // cout << w << endl;
+  // cout << h << endl;
+  //  testOrthographicRayCompute(h, w, imData);
   testPerspectiveCamera(h, w, imData);
+  testXMLparsing(args.inputFileName);
   exit(EXIT_SUCCESS);
 }

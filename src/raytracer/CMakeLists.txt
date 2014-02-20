@@ -35,6 +35,7 @@ add_executable(write_images
   )
 
 add_library(raytracer
+  camera_creator.h
   camera.h camera.cpp
   ray.cpp ray.h
   orthographic_camera.cpp orthographic_camera.h
