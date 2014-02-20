@@ -13,26 +13,30 @@ namespace raytracer {
   {
   public:
     //! Default Constructor
-    Camera() {};
+    Camera();
 
     //! Constructor from only the location.
-    Camera(Vector3D location) {};
+    Camera(Vector3D location);
 
     //! Constructor from camera location and direction.
-    Camera(Vector3D location, Vector3D direction) {};
+    Camera(Vector3D location, Vector3D direction);
 
     virtual ~Camera() {}
 
-    Ray computeRay(int i, int j){};
+    Ray computeRay(int i, int j);
 
-    Basis camerasOrigin;
+
     Vector3D location;
     Vector3D viewDirection;
     float focalLength;
-    float imagePlaneWidth;
+    float imageWidth;
+    float imageHeight;
     Basis orthoBasis;
 
   private:
+    bool areColinear(Vector3D& a, Vector3D& b);
+
+    Vector3D getNonColinear(Vector3D vec);
 
   };
 }
