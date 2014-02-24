@@ -23,4 +23,5 @@ namespace raytracer {
   };
 }
 
+
 #endif /* __RAYTRACER_RAY_H_ */

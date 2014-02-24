@@ -6,7 +6,7 @@ namespace raytracer {
 
   Camera::Camera(void){
     location = Vector3D(1.0, 1.0, 1.0);
-    viewDirection = Vector3D(0.0,0.0,-0.9);
+    viewDirection = Vector3D(0.0,0.0,-1.0);
     this->orthoBasis = Basis();
     this->imageHeight = 100.0;
     this->imageWidth = 100.0;

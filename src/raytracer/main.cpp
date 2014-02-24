@@ -51,7 +51,7 @@ void testOrthographicRayCompute(int h, int w, png::image<png::rgb_pixel> imData)
   imData.write("ortho.png");
 }
 
-void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData)
+void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, GraphicsArgs gArgs)
 {
   PerspectiveCamera *cam = new PerspectiveCamera();
   cam->setHeightWidth(h, w);
@@ -65,11 +65,9 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData)
       Ray r = cam->computeRay(x, y);
 
       Vector3D k = r.direction;
-      cout << k << endl;
-      // cout << k[0] << endl;
-      // cout << k[1] << endl;
-      // cout << k[2] << endl;
-
+      if(gArgs.verbose){
+	cout << k << endl;
+      }
 
       k.normalize();
       k.set(k[0] * 0.5 + .5, k[1] * .5 + .5, k[2] * 0.5 + .5);
@@ -78,13 +76,48 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData)
 				     k[1] * 255.0,
 				     k[2] * 255.0);
     }
-  imData.write("perspectiveraygeneration.png");
+  imData.write("perspectiveNoArg.png");
+
+  //  const Vector3D testLocation(4.0, .5, -.6);
+  const Vector3D testLocation(1.0, 0.0, 0.0);
+  PerspectiveCamera *cam2 = new PerspectiveCamera(testLocation);
+  cam2->setHeightWidth(h, w);
+  for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
+    {
+      size_t x = idx % w;
+      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
+      //		cout << x << endl;
+      //		cout << y << endl;
+      assert((y >= 0) && (y < h) && x >= 0 && x < w);
+      Ray r = cam2->computeRay(x, y);
+
+      Vector3D k = r.direction;
+      if(gArgs.verbose){
+	cout << k << endl;
+      }
+
+      k.normalize();
+      k.set(k[0] * 0.3 + .5, k[1] * .5 + .5, k[2] * 0.5 + .4);
+
+      imData[y][x] = png::rgb_pixel( k[0] * 255.0,
+				     k[1] * 255.0,
+				     k[2] * 255.0);
+    }
+  imData.write("perspectiveOneArg.png");
 }
 
 void testXMLparsing(string fileName){
   XMLSceneParser xmlParser;
-  xmlParser.registerCallback("camera", new CameraCreator);
+  CameraCreator *camBuilder = new CameraCreator();
+  SceneContainerCreator *containerBuilder = new ScenceContainerCreator();
+  xmlParser.registerCallback("camera", camBuilder);
+  // xmlParser.registerCallback("light", new Creator);
+  // xmlParser.registerCallback("shader", new Creator);
+  // xmlParser.registerCallback("shape", new Creator);
+  // xmlParser.registerCallback("instance", new Creator);
   xmlParser.parseFile(fileName);
+
+
 }
 
 
@@ -98,7 +131,7 @@ int main(int argc, char *argv[])
   // cout << w << endl;
   // cout << h << endl;
   //  testOrthographicRayCompute(h, w, imData);
-  testPerspectiveCamera(h, w, imData);
+  testPerspectiveCamera(h, w, imData, args);
   testXMLparsing(args.inputFileName);
   exit(EXIT_SUCCESS);
 }
