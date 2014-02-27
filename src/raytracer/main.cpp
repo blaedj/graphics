@@ -12,7 +12,9 @@
 #include "camera_creator.h"
 #include "XMLSceneParser.h"
 #include "handleGraphicsArgs.h"
-
+#include "scene_container_creator.h"
+#include "shape.h"
+#include "basis.h"
 
 using namespace sivelab;
 using namespace std;
@@ -65,7 +67,7 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
       Ray r = cam->computeRay(x, y);
 
       Vector3D k = r.direction;
-      if(gArgs.verbose){
+      if(gArgs.verbose) {
 	cout << k << endl;
       }
 
@@ -92,7 +94,7 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
       Ray r = cam2->computeRay(x, y);
 
       Vector3D k = r.direction;
-      if(gArgs.verbose){
+      if(gArgs.verbose) {
 	cout << k << endl;
       }
 
@@ -106,15 +108,22 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
   imData.write("perspectiveOneArg.png");
 }
 
-void testXMLparsing(string fileName){
+void testXMLparsing(string fileName) {
   XMLSceneParser xmlParser;
-  CameraCreator *camBuilder = new CameraCreator();
-  SceneContainerCreator *containerBuilder = new ScenceContainerCreator();
-  xmlParser.registerCallback("camera", camBuilder);
-  // xmlParser.registerCallback("light", new Creator);
-  // xmlParser.registerCallback("shader", new Creator);
-  // xmlParser.registerCallback("shape", new Creator);
-  // xmlParser.registerCallback("instance", new Creator);
+  //CameraCreator *camBuilder = new CameraCreator();
+  SceneContainerCreator *containerBuilder;// = new SceneContainerCreator();
+  string camera = "camera";
+  string light = "light";
+  string shader = "shader";
+  string shape = "shape";
+  string instance = "instance";
+
+
+  xmlParser.registerCallback(camera, containerBuilder);
+  xmlParser.registerCallback(light, containerBuilder);
+  xmlParser.registerCallback(shader, containerBuilder);
+  xmlParser.registerCallback(shape, containerBuilder);
+  xmlParser.registerCallback(instance, containerBuilder);
   xmlParser.parseFile(fileName);
 
 

@@ -41,8 +41,16 @@ add_library(raytracer
   orthographic_camera.cpp orthographic_camera.h
   perspective_camera.cpp perspective_camera.h
   basis.cpp basis.h
+  light.h #light.cpp
+  shape.h
+  scene_container_creator.cpp scene_container_creator.h
+  scene_container.h
+  sphere.cpp sphere.h
+  lambertian_shader.h
+  shape_creator.h
 )
 
+target_link_libraries(raytracer ${Boost_PROGRAM_OPTIONS_LIBRARIES})
 target_link_libraries(write_images raytracer)
 target_link_libraries(write_images sive-rtutil)
 target_link_libraries(write_images ${Boost_PROGRAM_OPTIONS_LIBRARIES})
