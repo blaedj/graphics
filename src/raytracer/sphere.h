@@ -8,10 +8,12 @@ namespace raytracer {
   class Sphere : public Shape {
 
   public:
-    Sphere();
+    Sphere() {}
+    virtual ~Sphere(){}
+
     Sphere(Vector3D center, double radius);
 
-    virtual ~Sphere();
+
 
     virtual bool closestHit(const Ray &ray, float &dist);
 

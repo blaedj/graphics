@@ -12,9 +12,10 @@ namespace raytracer {
   class Shape
   {
   public:
-    Shape();
-    virtual ~Shape();
-    virtual bool closesstHit(const Ray &ray);
+    Shape() {}
+    virtual ~Shape() {}
+
+    virtual bool closestHit(const Ray &ray, float &distance) = 0;
     Basis ortho;
     Shader* shader;
     Vector3D center;

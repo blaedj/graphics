@@ -12,7 +12,7 @@
 #include "camera_creator.h"
 #include "XMLSceneParser.h"
 #include "handleGraphicsArgs.h"
-#include "scene_container_creator.h"
+#include "scene.h"
 #include "shape.h"
 #include "basis.h"
 
@@ -82,12 +82,14 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
 
   //  const Vector3D testLocation(4.0, .5, -.6);
   const Vector3D testLocation(1.0, 0.0, 0.0);
-  PerspectiveCamera *cam2 = new PerspectiveCamera(testLocation);
+  PerspectiveCamera *cam2 =
+    new PerspectiveCamera(testLocation, "testCamera", .8, .8 );
+
   cam2->setHeightWidth(h, w);
   for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
     {
       size_t x = idx % w;
-      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
+      size_t y = static_cast<size_t>(floor(idx / static_cast<float>(imData.get_width())));
       //		cout << x << endl;
       //		cout << y << endl;
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
@@ -111,19 +113,13 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
 void testXMLparsing(string fileName) {
   XMLSceneParser xmlParser;
   //CameraCreator *camBuilder = new CameraCreator();
-  SceneContainerCreator *containerBuilder;// = new SceneContainerCreator();
-  string camera = "camera";
-  string light = "light";
-  string shader = "shader";
-  string shape = "shape";
-  string instance = "instance";
+  Scene *scene = new Scene();
 
-
-  xmlParser.registerCallback(camera, containerBuilder);
-  xmlParser.registerCallback(light, containerBuilder);
-  xmlParser.registerCallback(shader, containerBuilder);
-  xmlParser.registerCallback(shape, containerBuilder);
-  xmlParser.registerCallback(instance, containerBuilder);
+  xmlParser.registerCallback("camera", scene);
+  xmlParser.registerCallback("light", scene);
+  xmlParser.registerCallback("shader", scene);
+  xmlParser.registerCallback("shape", scene);
+  //  xmlParser.registerCallback("instance", scene);
   xmlParser.parseFile(fileName);
 
 

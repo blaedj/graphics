@@ -10,7 +10,7 @@ namespace raytracer {
   }
 
   // if yes, then the ray intersects the sphere surface at magnitude 't'.
-  bool Sphere::closestHit( const Ray &ray, float &dist){
+  bool Sphere::closestHit( const Ray &ray, float &distance){
     // the question to answer is: Does plugging t into the equation return 0?
     // if yes, then the ray intersects the sphere surface at magnitude 't'.
     // t: a(t * t) + B*t + c = 0?
@@ -41,10 +41,10 @@ namespace raytracer {
     if(t1 < 0){ return false;}
 
     if(t0 < 0) { //intersection point must be positive, so return t1.
-      dist = t1;
+      distance = t1;
       return true;
     } else { // t0 is the intersection point.
-      dist = t0;
+      distance = t0;
       return true;
     }
   }

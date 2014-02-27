@@ -13,25 +13,26 @@
 
 namespace raytracer {
 
-class OrthographicCamera: public raytracer::Camera {
-public:
-	OrthographicCamera();
-	virtual ~OrthographicCamera();
+  class OrthographicCamera: public raytracer::Camera {
+  public:
+    OrthographicCamera();
+    virtual ~OrthographicCamera();
 
-	//! Constructor from only the location.
-	OrthographicCamera(Vector3D location);
+    //! Constructor from only the location.
+    OrthographicCamera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth);
 
-	//! Constructor from camera location and direction.
-	OrthographicCamera(Vector3D location, Vector3D direction);
+    //! Constructor from camera location and direction.
+    OrthographicCamera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth);
 
-	void setHeightWidth(float height, float width){imageWidth = width; imageHeight = height;}
 
-	Ray computeRay(int i, int j);
+    void setHeightWidth(float height, float width){imageWidth = width; imageHeight = height;}
 
-private:
-	float imageWidth;
-	float imageHeight;
-};
+    Ray computeRay(int i, int j);
+
+  private:
+    float imageWidth;
+    float imageHeight;
+  };
 
 }
 

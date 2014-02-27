@@ -8,12 +8,10 @@ namespace raytracer {
 
   PerspectiveCamera::PerspectiveCamera() {}
 
-  PerspectiveCamera::PerspectiveCamera(sivelab::Vector3D location) :
-    Camera(location) { }
+  PerspectiveCamera::PerspectiveCamera(Vector3D location,std::string name, float focalLength, float imagePlaneWidth) : Camera(location, name, focalLength, imagePlaneWidth){ }
 
-  PerspectiveCamera::PerspectiveCamera(Vector3D location, Vector3D direction) :
-    Camera(location, direction) {
-  }
+  PerspectiveCamera::PerspectiveCamera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth) :
+    Camera(location, direction, name, focalLength, imagePlaneWidth){ }
 
   Ray PerspectiveCamera::computeRay(int i, int j){
     float leftBound = -(imageWidth/2.0);

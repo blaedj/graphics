@@ -8,8 +8,8 @@ namespace raytracer {
   class Light
   {
   public:
-    Light();
-    virtual ~Light();
+    Light(){};
+    virtual ~Light(){};
     Basis orthonormal;
   };
 

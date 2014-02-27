@@ -43,9 +43,9 @@ add_library(raytracer
   basis.cpp basis.h
   light.h #light.cpp
   shape.h
-  scene_container_creator.cpp scene_container_creator.h
-  scene_container.h
+  scene.cpp scene.h
   sphere.cpp sphere.h
+  shader.h
   lambertian_shader.h
   shape_creator.h
 )

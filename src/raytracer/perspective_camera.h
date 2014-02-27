@@ -18,16 +18,20 @@ namespace raytracer {
     PerspectiveCamera();
 
     //! Constructor from only the location.
-    PerspectiveCamera(Vector3D location);
+    PerspectiveCamera(Vector3D location, std::string name, float focalLength,
+		      float imagePlaneWidth);
 
     //! Constructor from camera location and direction.
-    PerspectiveCamera(Vector3D location, Vector3D direction);
+    PerspectiveCamera(Vector3D location, Vector3D direction, std::string name,
+		      float focalLength, float imagePlaneWidth);
 
     virtual ~PerspectiveCamera();
 
     Ray computeRay(int i, int j);
 
-    void setHeightWidth(float height, int width){this->imageHeight = height; this->imageWidth = width;}
+    void setHeightWidth(float height, int width){
+      this->imageHeight = height; this->imageWidth = width;
+    }
 
 
   private:

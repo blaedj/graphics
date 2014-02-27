@@ -15,10 +15,10 @@ namespace raytracer {
 
 OrthographicCamera::~OrthographicCamera() {}
 
-OrthographicCamera::OrthographicCamera(Vector3D location) : Camera(location){ }
+  OrthographicCamera::OrthographicCamera(Vector3D location,std::string name, float focalLength, float imagePlaneWidth) : Camera(location, name, focalLength, imagePlaneWidth){ }
 
-OrthographicCamera::OrthographicCamera(Vector3D location, Vector3D direction) :
-	Camera(location, direction){ }
+  OrthographicCamera::OrthographicCamera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth) :
+    Camera(location, direction, name, focalLength, imagePlaneWidth){ }
 
 Ray OrthographicCamera::computeRay(int i, int j){
 	//Need to fit image of nx x ny pixels into rectangle of size

@@ -12,9 +12,12 @@ namespace raytracer {
     this->imageWidth = 100.0;
   }
 
-  Camera::Camera(Vector3D location){
-
+  Camera::Camera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth){
     this->location = location;
+    this->name = name;
+    this->focalLength = focalLength;
+    this->imagePlaneWidth = imagePlaneWidth;
+
     // construct a basis from a single vector
     Vector3D W(location[0], location[1], location[2]); // create a copy of the location vector to normalize.
     W.normalize();
@@ -26,10 +29,12 @@ namespace raytracer {
     this->imageWidth = 100.0;
   }
 
-  Camera::Camera(Vector3D location, Vector3D direction) {
+  Camera::Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth){
     this->location = location;
     this->viewDirection = direction;
-
+    this->name = name;
+    this->focalLength = focalLength;
+    this->imagePlaneWidth = imagePlaneWidth;
     // construct a basis from 2 vectors
     Vector3D W = direction;
     W.normalize();

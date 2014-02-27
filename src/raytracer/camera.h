@@ -13,13 +13,13 @@ namespace raytracer {
   {
   public:
     //! Default Constructor
-    Camera();
+    Camera(void);
 
     //! Constructor from only the location.
-    Camera(Vector3D location);
+    Camera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth);
 
     //! Constructor from camera location and direction.
-    Camera(Vector3D location, Vector3D direction);
+    Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth);
 
     virtual ~Camera() {}
 
@@ -32,6 +32,8 @@ namespace raytracer {
     float imageWidth;
     float imageHeight;
     Basis orthoBasis;
+    std::string name;
+    float imagePlaneWidth;
 
   private:
     bool areColinear(Vector3D& a, Vector3D& b);

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
   float imagePlaneWidth;
 
   Vector3D location(1.0,2.0,1.0);
-  PerspectiveCamera cam(location);
+  PerspectiveCamera cam(location, "testCamera", .8, .8);
   assert(vectorsEqual(cam.location, location));
   exit(EXIT_SUCCESS);
 }
@@ -37,14 +37,14 @@ BOOST_AUTO_TEST_CASE(locationSet)
   float imagePlaneWidth;
 
   Vector3D location(1.0,2.0,1.0);
-  PerspectiveCamera cam(location);
+  PerspectiveCamera cam(location, "testCamera", .8, .8);
   BOOST_CHECK(vectorsEqual(cam.location, location));
 }
 
 BOOST_AUTO_TEST_CASE (orthonormal)
 {
   Vector3D location(1.0,2.0,1.0);
-  PerspectiveCamera cam(location);
+  PerspectiveCamera cam(location, "testCamera", .8, .8);
   // assert(false);//NEED TO IMPLEMENT 2-ARG CAMERA CONSTRUCTOR!!! perspective_camera.cpp
   BOOST_CHECK(checkOrthonormal(cam.orthoBasis));
 }
