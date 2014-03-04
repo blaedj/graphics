@@ -1,4 +1,5 @@
 
+#include <cfloat>
 #include "scene.h"
 #include "sphere.h"
 

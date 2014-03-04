@@ -30,13 +30,17 @@ namespace raytracer {
     float b = 2 * ray.direction.dot(ray.origin);
     float c = ray.origin.dot(ray.origin) - (this->radius * this->radius);
     float discriminant = b * b - 4 * a * c;
-    if ( discriminant > 0.0 ) {
+
+
+
+    float eps = .0003;
+    if ( discriminant >= eps ) {
       return false;
     }
 
     float distanceRoot = sqrtf(discriminant);
     float t; // intersection 't'
-    if(b < 0.0) {
+    if(b < eps) {
       t = (-b - distanceRoot) / 2.0;
     } else {
       t = (-b + distanceRoot) / 2.0;
@@ -50,9 +54,9 @@ namespace raytracer {
     t0 = (t0 < t1) ? t1 : t0;
 
     // if t1 < zero, the sphere is behind the ray origin, no intersection.
-    if(t1 < 0){ return false;}
+    if(t1 < eps){ return false;}
 
-    if(t0 < 0) { //intersection point must be positive, so return t1.
+    if(t0 < eps) { //intersection point must be positive, so return t1.
       distance = t1;
       return true;
     } else { // t0 is the intersection point.
