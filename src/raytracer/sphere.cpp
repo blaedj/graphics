@@ -1,4 +1,5 @@
 #include "sphere.h"
+#include "solid_shader.h"
 
 using namespace std;
 

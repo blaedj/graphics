@@ -3,6 +3,7 @@
 
 #include "Vector3D.h"
 #include "shape.h"
+#include "shader.h"
 
 namespace raytracer {
   class Sphere : public Shape {
