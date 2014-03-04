@@ -4,8 +4,8 @@
 class Shader
 {
 public:
-  Shader();
-  virtual ~Shader();
+  Shader() {}
+  virtual ~Shader() { }
 
 };
 

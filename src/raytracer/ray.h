@@ -12,7 +12,7 @@ namespace raytracer {
     Vector3D direction;
 
     //! Default constructor
-    Ray(void);
+    Ray() { }
 
     Ray(const Vector3D& origin, const Vector3D& direction) {
       this->origin = origin;this->direction = direction;
