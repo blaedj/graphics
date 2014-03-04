@@ -1,5 +1,9 @@
-#ifndef _SCENE_CONTAINER_CREATOR_H_
-#define _SCENE_CONTAINER_CREATOR_H_
+#ifndef _SCENE_H_
+#define _SCENE_H_
+
+
+
+
 
 #include <iostream>
 #include <cstdlib>
@@ -12,6 +16,7 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include "SceneDataContainer.h"
+#include "png++/png.hpp"
 
 using namespace std;
 using namespace sivelab;
@@ -35,6 +40,11 @@ namespace raytracer {
 
     Camera* parseCameraData(const ptree::value_type &v);
 
+    void render(std::string outFileName, int width, int height );
+
+    Vector3D computeRayColor(Ray &ray, float tmin, float &tmax);
+
   };
 }
-#endif /* _SCENE_CONTAINER_CREATOR_H_ */
+
+#endif /* _SCENE_H_ */

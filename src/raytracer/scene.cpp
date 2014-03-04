@@ -63,13 +63,27 @@ namespace raytracer {
 
   }
 
-  Shape* Scene::parseShapeData(const ptree::value_type &v) {
+  Shape* Scene::parseShapeData( ptree::value_type const &v) {
     //v.second.get < std::string > ("intensity")
-    if(v.second.get<std::string>("type") == "sphere") {
+    std::istringstream buffer;
+
+    string type, name;
+    type = v.second.get<std::string>("<xmlattr>.type");
+    name = v.second.get<std::string>("<xmlattr>.name");
+
+
+    if(type == "sphere") {
       float radius;
-      Vector3D position;
-      Sphere *s = new Sphere();
+      Vector3D center;
+      buffer.str( v.second.get<string>("center") );
+      buffer >> center;
+      buffer.clear();
+      radius = v.second.get<float>("radius");
+      Sphere *s = new Sphere(center, radius);
+      return s;
     }
+
+
   }
 
   Camera* Scene::parseCameraData(const ptree::value_type &v) {
@@ -116,6 +130,46 @@ namespace raytracer {
 
     Camera *cam = new Camera(position, viewDir, name, focalLength, imagePlaneWidth);
     return cam;
+
+  }
+
+  void Scene::render(std::string outFileName, int width, int height){
+    // cout << "image rendered to " << outFileName << ".\n"
+    // 	 << "with width " << width << " and height " << height << endl;
+
+    png::image< png::rgb_pixel > imData( width, height );
+
+    Camera *selectedCamera = this->cameraList.at(0);
+    Ray r;
+    float tmin, tmax;
+    tmin = .003;//TODO: what should min be?
+    tmax = FLT_MAX;
+
+    for (size_t y = 0; y < imData.get_height(); ++y) {
+      for (size_t x = 0; x < imData.get_width(); ++x){
+	//find the closestHit
+	r = selectedCamera->computeRay(x, y, r);
+	imData[y][x] = computeRayColor(r,tmin,  tmax);
+
+      }
+    }
+    imData.write(outFileName);
+  }
+
+  Vector3D computeRayColor(Ray &ray, float tmin, float &tmax) {
+    Shape shape;
+    float marginError = .001;
+    float t = 0.0;
+    float distance = 0.0;
+    for(int i = 0; i < shapeList.size(); i++){
+      shape = shapeList.at(i);
+      struct HitInfo hitStruct = shape.closestHit(ray);
+      if(distance - t >= marginError){ // then t is smaller to camera than distance
+	// set this t to distance, and use this shape as the 'hit' shape
+	hh;	  //TODO: use hitstruct here
+      }
+
+    }
 
   }
 
