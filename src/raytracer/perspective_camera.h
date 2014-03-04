@@ -27,7 +27,7 @@ namespace raytracer {
 
     virtual ~PerspectiveCamera();
 
-    Ray computeRay(int i, int j);
+    Ray computeRay(int i, int j, Ray &r);
 
     void setHeightWidth(float height, int width){
       this->imageHeight = height; this->imageWidth = width;

@@ -23,7 +23,7 @@ namespace raytracer {
 
     virtual ~Camera() {}
 
-    Ray computeRay(int i, int j);
+    Ray computeRay(int i, int j, Ray &r) {}
 
 
     Vector3D location;

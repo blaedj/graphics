@@ -13,7 +13,7 @@ namespace raytracer {
   PerspectiveCamera::PerspectiveCamera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth) :
     Camera(location, direction, name, focalLength, imagePlaneWidth){ }
 
-  Ray PerspectiveCamera::computeRay(int i, int j){
+  Ray PerspectiveCamera::computeRay(int i, int j, Ray &r){
     float leftBound = -(imageWidth/2.0);
     float rightBound = (imageWidth/2.0);
     float bottomBound = -(imageHeight/2.0);
@@ -29,8 +29,9 @@ namespace raytracer {
       (rayV * this->orthoBasis.V);
 
     const Vector3D rayOrigin = this->location;
-    Ray ray(rayOrigin, rayDirection);
-    return ray;
+    r.origin = rayOrigin;
+    r.direction = rayDirection;
+    return r;
   }
 
 }
