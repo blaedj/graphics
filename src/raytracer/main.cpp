@@ -64,7 +64,8 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
       //		cout << x << endl;
       //		cout << y << endl;
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
-      Ray r = cam->computeRay(x, y);
+      Ray r;
+      r = cam->computeRay((size_t)x, (size_t)y, r);
 
       Vector3D k = r.direction;
       if(gArgs.verbose) {
@@ -93,7 +94,8 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
       //		cout << x << endl;
       //		cout << y << endl;
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
-      Ray r = cam2->computeRay(x, y);
+      Ray r;
+      r = cam2->computeRay(x, y,r);
 
       Vector3D k = r.direction;
       if(gArgs.verbose) {
@@ -125,11 +127,8 @@ void testXMLparsing(string fileName) {
 
 }
 
-
-int main(int argc, char *argv[])
+int runTests(GraphicsArgs args)
 {
-  GraphicsArgs args;
-  args.process(argc, argv);
   float w = args.width;
   float h = args.height;
   png::image< png::rgb_pixel > imData( w, h );
@@ -139,4 +138,31 @@ int main(int argc, char *argv[])
   testPerspectiveCamera(h, w, imData, args);
   testXMLparsing(args.inputFileName);
   exit(EXIT_SUCCESS);
+}
+
+int main(int argc, char *argv[])
+{
+  GraphicsArgs args;
+  args.process(argc, argv);
+  string filename = args.inputFileName;
+
+  //runTests(args);
+
+  XMLSceneParser xmlParser;
+
+  Scene *scene = new Scene();
+  xmlParser.registerCallback("camera", scene);
+  xmlParser.registerCallback("light", scene);
+  xmlParser.registerCallback("shader", scene);
+  xmlParser.registerCallback("shape", scene);
+  //  xmlParser.registerCallback("instance", scene);
+  xmlParser.parseFile(filename);
+  assert(scene->lightList.size() > 0);
+  assert(scene->shapeList.size() > 0);
+  assert(scene->cameraList.size() > 0);
+  cout << "The size of the light, camera and shape lists were greater than 0!\n";
+  scene->render(args.outputFileName, args.width, args.height);
+
+
+  return 0;
 }
