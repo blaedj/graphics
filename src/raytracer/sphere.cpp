@@ -7,10 +7,22 @@ namespace raytracer {
   Sphere::Sphere(Vector3D center, double radius){
     this->center = center;
     this->radius = radius;
+    Vector3D color(0.9, 1.0, 0.0);
+    Shader *solidColor = new SolidShader(color);
+    this->shader = solidColor;
   }
 
-  // if yes, then the ray intersects the sphere surface at magnitude 't'.
-  bool Sphere::closestHit( const Ray &ray, float &distance){
+  Sphere::Sphere(Vector3D center, double radius, Shader *shader){
+    this->center = center;
+    this->radius = radius;
+    this->shader = shader;
+  }
+
+
+  HitInfo Sphere::closestHit( const Ray &ray){
+    struct HitInfo hitStruct;
+    hitstruct.hit = false;
+
     // the question to answer is: Does plugging t into the equation return 0?
     // if yes, then the ray intersects the sphere surface at magnitude 't'.
     // t: a(t * t) + B*t + c = 0?

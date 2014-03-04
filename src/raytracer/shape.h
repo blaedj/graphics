@@ -9,16 +9,24 @@
 #include "basis.h"
 
 namespace raytracer {
+ struct HitInfo
+ {
+   bool hit;
+   float distance;
+   Vector3D surfaceNormal;
+ };
+
   class Shape
   {
   public:
     Shape() {}
     virtual ~Shape() {}
 
-    virtual bool closestHit(const Ray &ray, float &distance) = 0;
+    virtual HitInfo closestHit(const Ray &ray) = 0;
     Basis ortho;
     Shader* shader;
     Vector3D center;
+
   };
 }
 

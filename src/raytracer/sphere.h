@@ -13,11 +13,12 @@ namespace raytracer {
 
     Sphere(Vector3D center, double radius);
 
+    Sphere(Vector3D center, double radius, Shader *shader);
 
-
-    virtual bool closestHit(const Ray &ray, float &dist);
+    virtual HitInfo closestHit(const Ray &ray);
 
   private:
+    Shader *shader;
     Vector3D center;
     double radius;
 
