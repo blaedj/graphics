@@ -33,10 +33,8 @@ namespace raytracer {
       this->imageHeight = height; this->imageWidth = width;
     }
 
-
   private:
-    // float imageWidth;
-    // float imageHeight;
+
   };
 }
 
