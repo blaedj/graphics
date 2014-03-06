@@ -7,6 +7,8 @@ public:
   Shader() {}
   virtual ~Shader() { }
 
+  virtual Vector3D getColor() = 0;
+
 };
 
 #endif /* _SHADER_H_ */

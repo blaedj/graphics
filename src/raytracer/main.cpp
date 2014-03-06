@@ -24,6 +24,7 @@ void testOrthographicRayCompute(int h, int w, png::image<png::rgb_pixel> imData)
 {
   OrthographicCamera *cam = new OrthographicCamera();
   cam->setHeightWidth(h, w);
+  Ray r;
   for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
     {
       size_t x = idx % w;
@@ -31,7 +32,7 @@ void testOrthographicRayCompute(int h, int w, png::image<png::rgb_pixel> imData)
       //		cout << x << endl;
       //		cout << y << endl;
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
-      Ray r = cam->computeRay(x, y);
+      r = cam->computeRay(x, y, r);
 
       Vector3D k = r.origin;
       k.normalize();
@@ -60,16 +61,14 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
   for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
     {
       size_t x = idx % w;
-      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imData.get_width())) );
-      //		cout << x << endl;
-      //		cout << y << endl;
+      size_t y = static_cast<size_t>(floor(idx / static_cast<float>(imData.get_width())));
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
       Ray r;
       r = cam->computeRay((size_t)x, (size_t)y, r);
 
       Vector3D k = r.direction;
       if(gArgs.verbose) {
-	cout << k << endl;
+	//cout << k << endl;
       }
 
       k.normalize();
@@ -84,9 +83,10 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
   //  const Vector3D testLocation(4.0, .5, -.6);
   const Vector3D testLocation(1.0, 0.0, 0.0);
   PerspectiveCamera *cam2 =
-    new PerspectiveCamera(testLocation, "testCamera", .8, .8 );
+    new PerspectiveCamera(testLocation, "testCamera", 1, .5 );
 
   cam2->setHeightWidth(h, w);
+  Ray r;
   for (unsigned int idx=0; idx<imData.get_height()*imData.get_width(); ++idx)
     {
       size_t x = idx % w;
@@ -94,12 +94,12 @@ void testPerspectiveCamera(int h, int w, png::image<png::rgb_pixel> imData, Grap
       //		cout << x << endl;
       //		cout << y << endl;
       assert((y >= 0) && (y < h) && x >= 0 && x < w);
-      Ray r;
+
       r = cam2->computeRay(x, y,r);
 
       Vector3D k = r.direction;
       if(gArgs.verbose) {
-	cout << k << endl;
+	//cout << k << endl;
       }
 
       k.normalize();
@@ -123,8 +123,6 @@ void testXMLparsing(string fileName) {
   xmlParser.registerCallback("shape", scene);
   //  xmlParser.registerCallback("instance", scene);
   xmlParser.parseFile(fileName);
-
-
 }
 
 int runTests(GraphicsArgs args)
@@ -137,7 +135,6 @@ int runTests(GraphicsArgs args)
   //  testOrthographicRayCompute(h, w, imData);
   testPerspectiveCamera(h, w, imData, args);
   testXMLparsing(args.inputFileName);
-  exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[])
@@ -146,7 +143,7 @@ int main(int argc, char *argv[])
   args.process(argc, argv);
   string filename = args.inputFileName;
 
-  //runTests(args);
+  runTests(args);
 
   XMLSceneParser xmlParser;
 
@@ -160,9 +157,8 @@ int main(int argc, char *argv[])
   assert(scene->lightList.size() > 0);
   assert(scene->shapeList.size() > 0);
   assert(scene->cameraList.size() > 0);
-  cout << "The size of the light, camera and shape lists were greater than 0!\n";
+
+  //cout << "shape list[0]: " << scene->shapeList.at(0)->getCenter() << endl;
   scene->render(args.outputFileName, args.width, args.height);
-
-
   return 0;
 }

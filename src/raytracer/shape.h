@@ -23,9 +23,11 @@ namespace raytracer {
     virtual ~Shape() {}
 
     virtual HitInfo closestHit(const Ray &ray) = 0;
+    virtual Vector3D applyShader() = 0;
+    virtual Vector3D getCenter() = 0;
     Basis ortho;
-    Shader* shader;
-    Vector3D center;
+    //    Shader* shader;
+    Vector3D middleCenter;
 
   };
 }

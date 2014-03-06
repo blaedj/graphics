@@ -1,10 +1,6 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-
-
-
-
 #include <iostream>
 #include <cstdlib>
 
@@ -17,12 +13,25 @@
 #include <boost/property_tree/ptree.hpp>
 #include "SceneDataContainer.h"
 #include "png++/png.hpp"
+#include "perspective_camera.h"
 
 using namespace std;
 using namespace sivelab;
 using boost::property_tree::ptree;
 
 namespace raytracer {
+
+  //TODO: this class should support the concept of anyHit and closestHit
+  // anyhit may or may not require tmax & tmin
+  // tmin: should be small but not zero. maybe 10 x e^-4
+  // for float: 10 x e^-7 is the machine epsilon
+
+
+  //TODO: public Vector3D rayColor(Ray r, ) { // returns a color vector. inteface to all primary and reflective array for color computaion.
+  // find closest object
+  // apply_shader()
+  // return color;
+  // }
 
   class Scene : public SceneElementCreator {
   public:

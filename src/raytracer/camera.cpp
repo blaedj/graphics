@@ -36,11 +36,12 @@ namespace raytracer {
     this->focalLength = focalLength;
     this->imagePlaneWidth = imagePlaneWidth;
     // construct a basis from 2 vectors
-    Vector3D W = direction;
+    Vector3D W(direction);
     W.normalize();
     Vector3D upDir(0.0, 1.0, 0.0);
 
     if(areColinear(W, upDir)) {
+      cout << "were colinear, corected\n";
       upDir.set(0.0, 1.1, 0.0);
       upDir.normalize();
     }

@@ -27,7 +27,7 @@ namespace raytracer {
 
     void setHeightWidth(float height, float width){imageWidth = width; imageHeight = height;}
 
-    Ray computeRay(int i, int j);
+    virtual Ray computeRay(int i, int j, Ray &r);
 
   private:
     float imageWidth;

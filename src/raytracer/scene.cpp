@@ -1,6 +1,7 @@
-
 #include <cfloat>
+
 #include "scene.h"
+#include "shape.h"
 #include "sphere.h"
 
 using namespace std;
@@ -8,170 +9,214 @@ using namespace sivelab;
 
 namespace raytracer {
 
-  void Scene::instance(const ptree::value_type &v) {
+bool hitStructValid(HitInfo hitStruct, float tmin, float &tmax);
 
-    if (v.first == "sceneParameters") {
-      //bool useEnvMap = false; // what is this for?
-      Vector3D bg_color;
-      string envmapPrefix;
+void Scene::instance(const ptree::value_type &v) {
 
-      //TODO: Actually use these maybe?
-      boost::optional<std::string> pBGColor = v.second.get_optional< std::string > ("bgColor");
-      boost::optional<std::string> pEnvMapPrefix = v.second.get_optional< std::string > ("envMapPrefix");
-    }
+	if (v.first == "sceneParameters") {
+		//bool useEnvMap = false; // what is this for?
+		Vector3D bg_color;
+		string envmapPrefix;
 
-    if (v.first == "light") {
-      std::string type;
-      sivelab::Vector3D position, intensity;
-      std::istringstream buf;
+		//TODO: Actually use these maybe?
+		boost::optional<std::string> pBGColor = v.second.get_optional<
+				std::string>("bgColor");
+		boost::optional<std::string> pEnvMapPrefix = v.second.get_optional<
+				std::string>("envMapPrefix");
+	}
 
-      type = v.second.get < std::string > ("<xmlattr>.type");
+	if (v.first == "light") {
+		std::string type;
+		sivelab::Vector3D position, intensity;
+		std::istringstream buf;
 
-      buf.str(v.second.get < std::string > ("position"));
-      buf >> position;
-      buf.clear();
+		type = v.second.get<std::string>("<xmlattr>.type");
 
-      buf.str(v.second.get < std::string > ("intensity"));
-      buf >> intensity;
-      buf.clear();
+		buf.str(v.second.get<std::string>("position"));
+		buf >> position;
+		buf.clear();
 
-      if (type == "point") {
-	// Instance the new Point light...
-	std::cout << "Found a point light..." << std::endl;
-	lightList.push_back(new Light());
-      }
-    }
+		buf.str(v.second.get<std::string>("intensity"));
+		buf >> intensity;
+		buf.clear();
 
-    // Shader
-    if (v.first == "shader") {
-      //parseShaderData(v );
-      // need mirror, lambertion and blinn-phong shaders
-      //std::map<string, shader*> shaderMap;
-      //for each shader, map the shader name to a pointer to a shader
-    }
+		if (type == "point") {
+			// Instance the new Point light...
+			std::cout << "Found a point light..." << std::endl;
+			lightList.push_back(new Light());
+		}
+	}
 
-    // Shape or Instance
-    if (v.first == "shape") {
-      shapeList.push_back(parseShapeData(v));
-    }
+	// Shader
+	if (v.first == "shader") {
+		//parseShaderData(v );
+		// need mirror, lambertion and blinn-phong shaders
+		//std::map<string, shader*> shaderMap;
+		//for each shader, map the shader name to a pointer to a shader
+	}
 
-    if (v.first == "camera") {
+	// Shape or Instance
+	if (v.first == "shape") {
+		Shape *s = parseShapeData(v);
 
-      this->cameraList.push_back(parseCameraData(v));
+		shapeList.push_back(s);
+		cout << "push a shape: " << shapeList.at(0)->getCenter() << endl;
+	}
 
-    }
+	if (v.first == "camera") {
 
-  }
+		this->cameraList.push_back(parseCameraData(v));
 
-  Shape* Scene::parseShapeData( ptree::value_type const &v) {
-    //v.second.get < std::string > ("intensity")
-    std::istringstream buffer;
+	}
 
-    string type, name;
-    type = v.second.get<std::string>("<xmlattr>.type");
-    name = v.second.get<std::string>("<xmlattr>.name");
+}
 
+Shape* Scene::parseShapeData(ptree::value_type const &v) {
+	//v.second.get < std::string > ("intensity")
+	std::istringstream buffer;
 
-    if(type == "sphere") {
-      float radius;
-      Vector3D center;
-      buffer.str( v.second.get<string>("center") );
-      buffer >> center;
-      buffer.clear();
-      radius = v.second.get<float>("radius");
-      Sphere *s = new Sphere(center, radius);
-      return s;
-    }
+	string type, name;
+	type = v.second.get<std::string>("<xmlattr>.type");
+	name = v.second.get<std::string>("<xmlattr>.name");
 
+	if (type == "sphere") {
+		float radius;
+		Vector3D center;
+		buffer.str(v.second.get<string>("center"));
+		buffer >> center; // Vector3D has overloaded <<
+		buffer.clear();
 
-  }
+		cout << "Sphere's center is: " << center << endl;
+		radius = v.second.get<float>("radius");
 
-  Camera* Scene::parseCameraData(const ptree::value_type &v) {
-    std::istringstream buf;
+		Shape *s = new Sphere(center, radius);
+		cout << "shape center and radius are" << s->getCenter() << " and "
+				<< radius << endl;
+		return s;
+	}
+}
 
-    bool lookatSet = true;
-    string name, type;
-    Vector3D position, viewDir, lookatPoint;
-    float focalLength;
-    float imagePlaneWidth;
+Camera* Scene::parseCameraData(const ptree::value_type &v) {
+	std::istringstream buf;
 
-    name = v.second.get<std::string>("<xmlattr>.name");
-    type = v.second.get<std::string>("<xmlattr>.type");
+	bool lookatSet = true;
+	string name, type;
+	Vector3D position, viewDir, lookatPoint;
+	float focalLength;
+	float imagePlaneWidth;
 
-    buf.str( v.second.get<std::string>("position") );
-    buf >> position;
-    buf.clear();
+	name = v.second.get<std::string>("<xmlattr>.name");
+	type = v.second.get<std::string>("<xmlattr>.type");
 
-    // LookAtPoint and ViewDir are optional, but one should be specified.
-    boost::optional<std::string> plookatPoint = v.second.get_optional<std::string>("lookatPoint");
-    boost::optional<std::string > pviewDir = v.second.get_optional<std::string>("viewDir");
+	buf.str(v.second.get<std::string>("position"));
+	buf >> position;
+	buf.clear();
 
-    if (plookatPoint) {
-      lookatSet = true;
-      buf.str( *plookatPoint );
-      buf >> lookatPoint;
-      buf.clear();
-      //gaze = lookatPoint - camera.position).normalize();
-      viewDir = lookatPoint - position;
-      viewDir.normalize();
-    } else if (pviewDir) {
-      buf.str( *pviewDir );
-      buf >> viewDir;
-      buf.clear();
-    }
+	// LookAtPoint and ViewDir are optional, but one should be specified.
+	boost::optional<std::string> plookatPoint = v.second.get_optional<
+			std::string>("lookatPoint");
+	boost::optional<std::string> pviewDir = v.second.get_optional<std::string>(
+			"viewDir");
 
-    buf.str( v.second.get<std::string>("focalLength") );
-    buf >> focalLength;
-    buf.clear();
+	if (plookatPoint) {
+		lookatSet = true;
+		buf.str(*plookatPoint);
+		buf >> lookatPoint;
+		buf.clear();
+		//gaze = lookatPoint - camera.position).normalize();
+		viewDir = lookatPoint - position;
+		viewDir.normalize();
+	} else if (pviewDir) {
+		buf.str(*pviewDir);
+		buf >> viewDir;
+		buf.clear();
+	}
 
-    buf.str( v.second.get<std::string>("imagePlaneWidth") );
-    buf >> imagePlaneWidth;
-    buf.clear();
+	buf.str(v.second.get<std::string>("focalLength"));
+	buf >> focalLength;
+	buf.clear();
 
-    Camera *cam = new Camera(position, viewDir, name, focalLength, imagePlaneWidth);
-    return cam;
+	buf.str(v.second.get<std::string>("imagePlaneWidth"));
+	buf >> imagePlaneWidth;
+	buf.clear();
 
-  }
+	Camera *cam = new PerspectiveCamera(position, viewDir, name, focalLength,
+			imagePlaneWidth);
+	return cam;
 
-  void Scene::render(std::string outFileName, int width, int height){
-    // cout << "image rendered to " << outFileName << ".\n"
-    // 	 << "with width " << width << " and height " << height << endl;
+}
 
-    png::image< png::rgb_pixel > imData( width, height );
+void Scene::render(std::string outFileName, int width, int height) {
+	// cout << "image rendered to " << outFileName << ".\n"
+	// 	 << "with width " << width << " and height " << height << endl;
 
-    Camera *selectedCamera = this->cameraList.at(0);
-    Ray r;
-    float tmin, tmax;
-    tmin = .003;//TODO: what should min be?
-    tmax = FLT_MAX;
+	png::image<png::rgb_pixel> imageData(width, height);
+	Vector3D color;
+	Camera *selectedCamera = this->cameraList.at(0);
 
-    for (size_t y = 0; y < imData.get_height(); ++y) {
-      for (size_t x = 0; x < imData.get_width(); ++x){
-	//find the closestHit
-	r = selectedCamera->computeRay(x, y, r);
-	imData[y][x] = computeRayColor(r,tmin,  tmax);
+	/**HACK***/
+	selectedCamera->imageWidth = width;
+	selectedCamera->imageHeight = height;
+	/**END HACK***/
 
-      }
-    }
-    imData.write(outFileName);
-  }
+	cout << "selected camera:\n\tis of name: " << selectedCamera->name << endl
+			<< "\tand has viewDir: " << selectedCamera->viewDirection << endl
+			<< "\tand has location: " << selectedCamera->location << endl
+			<< "\tand has image width: " << selectedCamera->imageWidth << endl
+			<< "\tand has image height: " << selectedCamera->imageHeight << endl
+			<< "\tand has focalLength: " << selectedCamera->focalLength << endl
+			<< "\tand has imagePlaneWidth: " << selectedCamera->imagePlaneWidth
+			<< endl;
 
-  Vector3D computeRayColor(Ray &ray, float tmin, float &tmax) {
-    Shape shape;
-    float marginError = .001;
-    float t = 0.0;
-    float distance = 0.0;
-    for(int i = 0; i < shapeList.size(); i++){
-      shape = shapeList.at(i);
-      struct HitInfo hitStruct = shape.closestHit(ray);
-      if(distance - t >= marginError){ // then t is smaller to camera than distance
-	// set this t to distance, and use this shape as the 'hit' shape
-	hh;	  //TODO: use hitstruct here
-      }
+	Ray r;
+	float tmin, tmax;
+	tmin = 1.0;    //TODO: what should min be?
+	tmax = FLT_MAX;
+	for (size_t y = 0; y < imageData.get_height(); ++y) {
+		for (size_t x = 0; x < imageData.get_width(); ++x) {
+			// for (unsigned int idx=0; idx<imageData.get_height()*imageData.get_width(); ++idx){
 
-    }
+			//size_t x = idx % width;
+			//size_t y = static_cast<size_t>(floor(idx / static_cast<float>(imageData.get_width())));
+			assert((y >= 0) && (y < height) && x >= 0 && x < width);
+			r = selectedCamera->computeRay(x, y, r);
+			cout << "ray dir is:" << r.direction << endl;
+			color = computeRayColor(r, tmin, tmax);
+			imageData[y][x] = png::rgb_pixel(color[0] * 255.0, color[1] * 255.0,
+					color[2] * 255.0);
+		}
+	}
+	imageData.write(outFileName);
+}
 
-  }
+// find closest object
+// apply_shader()
+// return color;
+Vector3D Scene::computeRayColor(Ray &ray, float tmin, float &tmax) {
+	Shape *nearestShape;
+	float marginError = .1f;
+	float distance = 0.0;
+	Shape *currShape;
+	/*************************/
+	Vector3D tempColor(0.0, 0.0, 0.0);
+	/*************************/
+	for (int i = 0; i < this->shapeList.size(); i++) {
+		currShape = this->shapeList.at(i);
+		struct HitInfo hitStruct = currShape->closestHit(ray);
 
+		if (hitStructValid(hitStruct, tmin, tmax)) {
+			// then t is smaller to camera than distance
+			// set this t to distance, and use this shape as the 'hit' shape
+			tempColor.set(0.0, 0.0, 1.0);
+			//cout << "Got a hit!\n";
+		}
+	}
+	return tempColor;
+}
+
+bool hitStructValid(HitInfo hitStruct, float tmin, float &tmax) {
+	return hitStruct.hit && hitStruct.distance >= tmin
+			&& hitStruct.distance < tmax;
+}
 
 } /** end  raytracer*/

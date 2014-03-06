@@ -15,7 +15,10 @@ namespace raytracer {
     Ray() { }
 
     Ray(const Vector3D& origin, const Vector3D& direction) {
-      this->origin = origin;this->direction = direction;
+      this->origin = origin;
+      this->direction = direction;
+      this->direction.normalize();
+
     }
 
     virtual ~Ray() {};

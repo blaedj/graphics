@@ -18,6 +18,10 @@ namespace raytracer {
 
     virtual HitInfo closestHit(const Ray &ray);
 
+    virtual Vector3D applyShader();
+
+    Vector3D getCenter(){return this->center;}
+
   private:
     Shader *shader;
     Vector3D center;
