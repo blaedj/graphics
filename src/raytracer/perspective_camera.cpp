@@ -14,12 +14,26 @@ namespace raytracer {
     Camera(location, direction, name, focalLength, imagePlaneWidth){ }
 
   Ray PerspectiveCamera::computeRay(int i, int j, Ray &r){
+    Vector3D U = this->orthoBasis.U;
+    Vector3D V = this->orthoBasis.V;
+    Vector3D W = this->orthoBasis.W;
 
-    float leftBound = -(imageWidth/2.0);
-    float rightBound = (imageWidth/2.0);
-    float bottomBound = -(imageHeight/2.0);
-    float topBound = (imageHeight/2.0);
-    /*if(std::abs(leftBound) <= .001){
+    float imagePlaneHeight = (this->imagePlaneWidth * imageHeight) / imageWidth;
+
+    float u = -imagePlaneHeight + (imagePlaneHeight + imagePlaneHeight)
+      * (i + 0.5) / imageHeight;
+
+    float v = -this->imagePlaneWidth + (this->imagePlaneWidth + this->imagePlaneWidth)
+      * (j + 0.5) / imageWidth;
+
+    Vector3D rayDirection = -(this->focalLength)*W + u*U +v*V;
+
+    /*
+      float leftBound = -(imageWidth/2.0);
+      float rightBound = (imageWidth/2.0);
+      float bottomBound = -(imageHeight/2.0);
+      float topBound = (imageHeight/2.0);
+      /*if(std::abs(leftBound) <= .001){
       cout << "An assertion has failed: abs(leftBound) < .001\n";
       cout << "image width: " << imageWidth << endl
       << "image height: " << imageWidth << endl
@@ -59,17 +73,17 @@ namespace raytracer {
       << "j: " << j << endl;
       exit(EXIT_FAILURE);
       }*/
-    double rayU = leftBound + (rightBound - leftBound)*(i + 0.5) / imageWidth;
-    double rayV = bottomBound + (topBound - bottomBound)*(j + 0.5) / imageHeight;
+    //double rayU = leftBound + (rightBound - leftBound)*(i + 0.5) / imageWidth;
+    // double rayV = bottomBound + (topBound - bottomBound)*(j + 0.5) / imageHeight;
 
     //	 ray.direction = -d*W + u*U + v*V
     // ray.origin = e; // e => camera origin
-    Vector3D rayDirection = (-1.0 * this->focalLength)*(this->orthoBasis.W) +
-      (rayU * this->orthoBasis.U) +
-      (rayV * this->orthoBasis.V);
-    rayDirection.normalize();
-    const Vector3D rayOrigin = this->location;
-    r.origin = rayOrigin;
+    // Vector3D rayDirection = (-this->focalLength)*(this->orthoBasis.W) +
+    //   (rayU * this->orthoBasis.U) +
+    //   (rayV * this->orthoBasis.V);
+
+    // const Vector3D rayOrigin = this->location;
+    r.origin = this->location;
     r.direction = rayDirection;
     return r;
   }

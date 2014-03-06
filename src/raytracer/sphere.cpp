@@ -4,6 +4,7 @@
 using namespace std;
 
 namespace raytracer {
+  bool inBounds(HitInfo hitStruct, float tmin, float &tmax );
 
   Sphere::Sphere(Vector3D center, double radius){
     this->center = center;
@@ -23,52 +24,56 @@ namespace raytracer {
     return this->shader->getColor();
   }
 
-  HitInfo Sphere::closestHit( const Ray &ray){
+  HitInfo Sphere::closestHit( const Ray &ray, float tmin, float &tmax){
     // the question to answer is: Does plugging t into the equation return 0?
     // if yes, then the ray intersects the sphere surface at magnitude 't'.
     // t: a(t * t) + B*t + c = 0?
     float eps = .001;
     struct HitInfo hitStruct;
     hitStruct.hit = false;
-
+    float u, f, t0, t1; // intersection distance 't'
     float a = pow(ray.direction.dot(ray.origin - this->center), 2.0);
     float b = (ray.origin - this->center).dot(ray.origin - this->center);
-    //float b = 2 * ray.direction.dot(ray.origin);
     float c = (b - (this->radius * this->radius));
 
-    float discriminant = a - ((ray.direction.dot(direction)) * c);//b * b - 4 * a * c;
 
-    if ( discriminant >= eps ) {
+    float discriminant = a - ((ray.direction.dot(ray.direction)) * (c));
+    if ( discriminant < 0.0 ) {
       hitStruct.hit = false;
       return hitStruct;
     } else {
+      u = ray.direction.dot(ray.direction);
+      f = (-1.0) * ray.direction.dot(ray.origin - this->center);
       float distanceRoot = sqrtf(discriminant);
-      float t; // intersection 't'
-      if(b < eps) {
-	t = (-b - distanceRoot) / 2.0;
-      } else {
-	t = (-b + distanceRoot) / 2.0;
-      }
 
-      // the two intersection points:
-      float t0 = t / a;
-      float t1 =  c / t;
-
-      //make t0 the largest of the 2 possible intersection points along the ray.
-      t0 = (t0 < t1) ? t1 : t0;
-
-      // if t1 < zero, the sphere is behind the ray origin, no intersection.
-      if(t1 < eps) {
-	hitStruct.hit = false;
-      }if(t0 < eps) { //intersection point must be positive, so return t1.
-	hitStruct.distance = t1;
+      if(discriminant < eps && discriminant > -eps){
+	hitStruct.distance = f / u;
+	if(!inBounds(hitStruct, tmin, tmax)){
+	  hitStruct.hit = false;
+	  return hitStruct;
+	}
+	//TODO: need to add surface Normal,
+	hitStruct.shader = this->shader;
 	hitStruct.hit = true;
-      } else { // t0 is the intersection point.
-	hitStruct.distance = t0;
+	return hitStruct;
+      } else{
+	t0 = (f + distanceRoot) / u;
+	t1 = (f - distanceRoot) / u;
+	hitStruct.distance = (t0 < t1) ? t1 : t0;
+	if(!inBounds(hitStruct, tmin, tmax)){
+	  hitStruct.hit = false;
+	  return hitStruct;
+	}
 	hitStruct.hit = true;
+	hitStruct.shader = this->shader;
+	return hitStruct;
       }
     }
-    return hitStruct;
+  }
+
+  bool inBounds(HitInfo hitStruct, float tmin, float &tmax )
+  {
+    return hitStruct.distance > tmin && hitStruct.distance < tmax;
   }
 
 

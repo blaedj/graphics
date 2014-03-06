@@ -25,6 +25,7 @@ namespace raytracer {
 
     virtual Ray computeRay(int i, int j, Ray &r) =0;// {}
 
+    //virtual void setHeightWidth(float height, int width) = 0;
 
     Vector3D location;
     Vector3D viewDirection;

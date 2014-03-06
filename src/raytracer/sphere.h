@@ -16,7 +16,7 @@ namespace raytracer {
 
     Sphere(Vector3D center, double radius, Shader *shader);
 
-    virtual HitInfo closestHit(const Ray &ray);
+    virtual HitInfo closestHit(const Ray &ray, float tmin, float &tmax);
 
     virtual Vector3D applyShader();
 

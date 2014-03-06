@@ -35,8 +35,8 @@ namespace raytracer {
 
 
   private:
-    float imageWidth;
-    float imageHeight;
+    // float imageWidth;
+    // float imageHeight;
   };
 }
 

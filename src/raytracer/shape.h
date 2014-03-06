@@ -14,6 +14,7 @@ namespace raytracer {
    bool hit;
    float distance;
    Vector3D surfaceNormal;
+   Shader *shader;
  };
 
   class Shape
@@ -22,7 +23,7 @@ namespace raytracer {
     Shape() {}
     virtual ~Shape() {}
 
-    virtual HitInfo closestHit(const Ray &ray) = 0;
+    virtual HitInfo closestHit(const Ray &ray, float tmin, float &tmax) = 0;
     virtual Vector3D applyShader() = 0;
     virtual Vector3D getCenter() = 0;
     Basis ortho;

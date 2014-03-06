@@ -8,8 +8,6 @@ namespace raytracer {
     location = Vector3D(1.0, 1.0, 1.0);
     viewDirection = Vector3D(0.0,0.0,-1.0);
     this->orthoBasis = Basis();
-    this->imageHeight = 100.0;
-    this->imageWidth = 100.0;
   }
 
   Camera::Camera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth){
@@ -25,8 +23,6 @@ namespace raytracer {
     Vector3D V = W*U;
     viewDirection = Vector3D(0.0,0.0,-1.0);
     orthoBasis = Basis(U, V, W);
-    this->imageHeight = 100.0;
-    this->imageWidth = 100.0;
   }
 
   Camera::Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth){
@@ -36,8 +32,9 @@ namespace raytracer {
     this->focalLength = focalLength;
     this->imagePlaneWidth = imagePlaneWidth;
     // construct a basis from 2 vectors
-    Vector3D W(direction);
+    Vector3D W(-1 * direction);
     W.normalize();
+
     Vector3D upDir(0.0, 1.0, 0.0);
 
     if(areColinear(W, upDir)) {
@@ -49,10 +46,9 @@ namespace raytracer {
     Vector3D U = upDir.cross(W);
     U.normalize();
     Vector3D V = W.cross(U);
+    V.normalize();
 
     orthoBasis = Basis(U, V, W);
-    this->imageHeight = 100.0;
-    this->imageWidth = 100.0;
   }
 
   bool Camera::areColinear(Vector3D& a, Vector3D& b) {
