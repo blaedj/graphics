@@ -183,9 +183,8 @@ namespace raytracer {
     float marginError = .1f;
     float distance = 0.0;
     Shape *currShape;
-    /******to replace with shaders****/
     Vector3D tempColor(0.0, 0.0, 0.0);
-    /*********************************/
+
     for (int i = 0; i < this->shapeList.size(); i++) {
       currShape = this->shapeList.at(i);
 

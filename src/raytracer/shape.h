@@ -27,7 +27,7 @@ namespace raytracer {
     virtual Vector3D applyShader() = 0;
     virtual Vector3D getCenter() = 0;
     Basis ortho;
-    //    Shader* shader;
+    Shader* shader;
     Vector3D middleCenter;
 
   };
