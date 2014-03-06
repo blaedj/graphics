@@ -4,6 +4,8 @@
 #include "basis.h"
 #include "Vector3D.h"
 
+#include "ray.h"
+
 using namespace sivelab;
 
 namespace raytracer {
@@ -11,22 +13,33 @@ namespace raytracer {
   {
   public:
     //! Default Constructor
-    Camera();
+    Camera(void);
 
     //! Constructor from only the location.
-    Camera(Vector3D location);
+    Camera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth);
 
-    virtual ~Camera();
+    //! Constructor from camera location and direction.
+    Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth);
 
-    bool CameraIsValid();
-    Vector3D getNonColinear(Vector3D vector);
+    virtual ~Camera() {}
 
-    Basis orthonormal;
-    double aX;
-    double aY;
-    double aZ;
+    virtual Ray computeRay(int i, int j, Ray &r) =0;// {}
+
+    //virtual void setHeightWidth(float height, int width) = 0;
+
+    Vector3D location;
+    Vector3D viewDirection;
+    float focalLength;
+    float imageWidth;
+    float imageHeight;
+    Basis orthoBasis;
+    std::string name;
+    float imagePlaneWidth;
 
   private:
+    bool areColinear(Vector3D& a, Vector3D& b);
+
+    Vector3D getNonColinear(Vector3D vec);
 
   };
 }

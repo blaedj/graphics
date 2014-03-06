@@ -4,34 +4,70 @@ using namespace std;
 
 namespace raytracer {
 
-  Camera::Camera() {}
-  Camera::~Camera() {}
+  Camera::Camera(void){
+    location = Vector3D(1.0, 1.0, 1.0);
+    viewDirection = Vector3D(0.0,0.0,-1.0);
+    this->orthoBasis = Basis();
+  }
 
-  Camera::Camera(Vector3D location){
+  Camera::Camera(Vector3D location, std::string name, float focalLength, float imagePlaneWidth){
+    this->location = location;
+    this->name = name;
+    this->focalLength = focalLength;
+    this->imagePlaneWidth = imagePlaneWidth;
+
     // construct a basis from a single vector
-    // W = location.normalize()
-    Vector3D W = location;
+    Vector3D W(location[0], location[1], location[2]); // create a copy of the location vector to normalize.
     W.normalize();
     Vector3D U = getNonColinear(W);
     Vector3D V = W*U;
-    orthonormal = Basis(U, V, W);
+    viewDirection = Vector3D(0.0,0.0,-1.0);
+    orthoBasis = Basis(U, V, W);
   }
 
-  Vector3D Camera::getNonColinear(Vector3D vector) {
-    Vector3D nonColinearVec(vector);
+  Camera::Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth){
+    this->location = location;
+    this->viewDirection = direction;
+    this->name = name;
+    this->focalLength = focalLength;
+    this->imagePlaneWidth = imagePlaneWidth;
+    // construct a basis from 2 vectors
+    Vector3D W(-1 * direction);
+    W.normalize();
 
-    if(vector[0] <= vector[1] && vector[0] <= vector[2]) {
-      nonColinearVec.set(1.0, vector[1], vector[2]);
-    } else if(vector[1] <= vector[0] && vector[1] <= vector[2]) {
-      nonColinearVec.set(vector[0], 1.0, vector[2]);
-    } else if(vector[2] <= vector[1] && vector[2] <= vector[1]) {
-      nonColinearVec.set(vector[0], vector[1], 1.0);
+    Vector3D upDir(0.0, 1.0, 0.0);
+
+    if(areColinear(W, upDir)) {
+      cout << "were colinear, corected\n";
+      upDir.set(0.0, 1.1, 0.0);
+      upDir.normalize();
+    }
+
+    Vector3D U = upDir.cross(W);
+    U.normalize();
+    Vector3D V = W.cross(U);
+    V.normalize();
+
+    orthoBasis = Basis(U, V, W);
+  }
+
+  bool Camera::areColinear(Vector3D& a, Vector3D& b) {
+    //test for co-linearity: (u dot v) / (length(u) * length(v)) > 1 - epsilon
+    double eps = .0001;
+    return ((a.dot(b) / a.length() * b.length()) > (1.0 -eps));
+  }
+
+  Vector3D Camera::getNonColinear(Vector3D vec) {
+    Vector3D nonColinearVec(vec);
+
+    if(vec[0] <= vec[1] && vec[0] <= vec[2]) {
+      nonColinearVec.set(1.0, vec[1], vec[2]);
+    } else if(vec[1] <= vec[0] && vec[1] <= vec[2]) {
+      nonColinearVec.set(vec[0], 1.0, vec[2]);
+    } else if(vec[2] <= vec[1] && vec[2] <= vec[1]) {
+      nonColinearVec.set(vec[0], vec[1], 1.0);
     }
     return nonColinearVec;
-  }
-
-  bool Camera::CameraIsValid() {
-    return true;
   }
 
 }

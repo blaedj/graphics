@@ -12,6 +12,7 @@ namespace raytracer {
   class Basis
   {
   public:
+    //! Default constructor. Sets to (1,1,1)^3
     Basis();
     virtual ~Basis();
 

@@ -35,10 +35,23 @@ add_executable(write_images
   )
 
 add_library(raytracer
-  camera.cpp  camera.h
+  camera_creator.h
+  camera.h camera.cpp
+  ray.cpp ray.h
+  orthographic_camera.cpp orthographic_camera.h
+  perspective_camera.cpp perspective_camera.h
   basis.cpp basis.h
+  light.h #light.cpp
+  shape.h
+  scene.cpp scene.h
+  sphere.cpp sphere.h
+  shader.h
+  solid_shader.h
+  lambertian_shader.h
+  shape_creator.h
 )
 
+target_link_libraries(raytracer ${Boost_PROGRAM_OPTIONS_LIBRARIES})
 target_link_libraries(write_images raytracer)
 target_link_libraries(write_images sive-rtutil)
 target_link_libraries(write_images ${Boost_PROGRAM_OPTIONS_LIBRARIES})
