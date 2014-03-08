@@ -8,6 +8,7 @@ using namespace sivelab;
 namespace raytracer {
 
   bool hitStructValid(HitInfo hitStruct, float tmin, float &tmax);
+  void print_tree(const ptree& pt, int level);
 
   void Scene::instance(const ptree::value_type &v) {
 
@@ -69,23 +70,38 @@ namespace raytracer {
     }
   }
 
+
+  //  void print_tree(const ptree& pt, int level)
+  //  {
+  //    const std::string sep(2 * level, ' ');
+  //    BOOST_FOREACH(const ptree::value_type &v, pt) {
+  //      std::cout
+  //	<< sep
+  //	<< q(v.first) << " : " << q(v.second.data()) << "\n";
+  //      print_tree(v.second, level + 1);
+  //    }
+  //  }
+
   void Scene::parseShapeData(ptree::value_type const &v) {
     //	  v.second.get < std::string > ("intensity")
     std::istringstream buffer;
     Shape *s;
-
     string type, name, shaderName;
+    Shader *shadr;
     type = v.second.get<std::string>("<xmlattr>.type");
     name = v.second.get<std::string>("<xmlattr>.name");
 
-    shaderName = v.second.get<std::string>("<xmlattr>.shader");
-    cout << "shader name: "<< shaderName << endl;
-    Shader *shadr;
+    ptree::const_assoc_iterator it;
+    cout << "looking for shader\n";
+    it = v.second.find("shader");
+    if( it != v.second.not_found() )
+      {
+    	shaderName = (*it).second.get<std::string>("<xmlattr>.ref");
+      } else {cout << "shader not found\n";}
 
     std::map<string, Shader*>::iterator iter;
+    cout << "looking in allShaders\n";
     iter = allShaders.find(shaderName);
-    assert(iter != allShaders.end());
-    cout << iter->second->getColor() << endl;
     shadr = iter->second;
 
     if (type == "sphere") {
