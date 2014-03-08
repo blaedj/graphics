@@ -8,14 +8,10 @@
 #include "shader.h"
 #include "basis.h"
 
+
 namespace raytracer {
- struct HitInfo
- {
-   bool hit;
-   float distance;
-   Vector3D surfaceNormal;
-   Shader *shader;
- };
+
+  struct HitInfo;
 
   class Shape
   {
@@ -25,12 +21,26 @@ namespace raytracer {
 
     virtual HitInfo closestHit(const Ray &ray, float tmin, float &tmax) = 0;
     virtual Vector3D applyShader() = 0;
-    virtual Vector3D getCenter() = 0;
+    //virtual Vector3D getCenter() = 0;
     Basis ortho;
-    Shader* shader;
     Vector3D middleCenter;
+    string name;
+    Shader* getShader() { return this->shader;}
+  protected:
+    Shader* shader;
 
   };
+
+  struct HitInfo
+  {
+    bool hit;
+    float distance;
+    Vector3D surfaceNormal;
+    Shader *shader;
+    Shape *hitShape;
+  };
+
+
 }
 
 #endif /* _SHAPE_H_ */

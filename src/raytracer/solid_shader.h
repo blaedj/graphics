@@ -3,26 +3,39 @@
 
 #include "Vector3D.h"
 
-class SolidShader : public Shader
-{
-public:
-  SolidShader() : Shader() { }
+namespace raytracer {
 
-  SolidShader(Vector3D colors) {
-    this->color = colors;
+  class SolidShader : public Shader
+  {
+  public:
+    SolidShader() { }
+
+    SolidShader(Vector3D colors) {
+      this->color = colors;
+    };
+
+    virtual ~SolidShader() { }
+
+
+    Vector3D getColor() {
+      return color;
+    }
+
+    virtual Vector3D calculateColor() {
+      return color;
+    };
+
+    virtual void setColor(Vector3D color){
+      this->color.set(color[0], color[1], color[2]);
+    };
+
+  private:
+    Vector3D color;
+
+
   };
 
-  virtual ~SolidShader() { }
 
-
-  Vector3D getColor() {
-    return color;
-  }
-
-private:
-  Vector3D color;
-
-
-};
+} /** end  raytracer*/
 
 #endif /* _SOLID_SHADER_H_ */
