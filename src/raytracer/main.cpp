@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <time.h>
 
 #include "png++/png.hpp"
 #include "handleGraphicsArgs.h"
@@ -144,6 +145,9 @@ int main(int argc, char *argv[])
   string filename = args.inputFileName;
 
   //runTests(args);
+  clock_t init, final;
+  init=clock();
+
 
   XMLSceneParser xmlParser;
 
@@ -159,5 +163,9 @@ int main(int argc, char *argv[])
   assert(scene->cameraList.size() > 0);
 
   scene->render(args.outputFileName, args.width, args.height);
+
+  final=clock()-init;
+  cout << "render time was: " << (double)final / ((double)CLOCKS_PER_SEC) << " seconds.\n";
+
   return 0;
 }
