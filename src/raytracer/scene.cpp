@@ -92,15 +92,13 @@ namespace raytracer {
     name = v.second.get<std::string>("<xmlattr>.name");
 
     ptree::const_assoc_iterator it;
-    cout << "looking for shader\n";
     it = v.second.find("shader");
     if( it != v.second.not_found() )
       {
     	shaderName = (*it).second.get<std::string>("<xmlattr>.ref");
-      } else {cout << "shader not found\n";}
+      } else {;/*cout << "shader not found\n";*/}
 
     std::map<string, Shader*>::iterator iter;
-    cout << "looking in allShaders\n";
     iter = allShaders.find(shaderName);
     shadr = iter->second;
 
@@ -210,6 +208,15 @@ namespace raytracer {
       // } else{
       // 	cout << "Shader reference already loaded.\n";
       // }
+    } else {
+      shader = new LambertianShader();
+      sivelab::Vector3D kd;
+      buffer.str( v.second.get<std::string>("diffuse") );
+      buffer >> kd;
+      buffer.clear();
+      shader->setColor(kd);
+
+      allShaders.insert(std::pair<string, Shader*>(name, shader));
     }
   }
 
