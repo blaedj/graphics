@@ -10,7 +10,7 @@ namespace raytracer {
 
   public:
     Sphere() {}
-    virtual ~Sphere(){}
+    virtual ~Sphere() {}
 
     Sphere(Vector3D center, double radius);
 
@@ -20,10 +20,9 @@ namespace raytracer {
 
     virtual Vector3D applyShader();
 
-    Vector3D getCenter(){return this->center;}
+    Vector3D getCenter() {return this->center;}
 
   private:
-    Shader *shader;
     Vector3D center;
     double radius;
 

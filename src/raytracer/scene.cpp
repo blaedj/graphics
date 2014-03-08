@@ -1,8 +1,6 @@
 #include <cfloat>
 
 #include "scene.h"
-#include "shape.h"
-#include "sphere.h"
 
 using namespace std;
 using namespace sivelab;
@@ -42,14 +40,16 @@ namespace raytracer {
 
       if (type == "point") {
 	// Instance the new Point light...
-	std::cout << "Found a point light..." << std::endl;
+	//std::cout << "Found a point light..." << std::endl;
 	lightList.push_back(new Light());
       }
     }
 
     // Shader
     if (v.first == "shader") {
-      //parseShaderData(v );
+      //string name = v.second.get<std::string>("<xmlattr>.name");
+      parseShaderData(v);
+      // allShaders.insert(std::pair<string, Shader*>(name, sh));
       // need mirror, lambertion and blinn-phong shaders
       //std::map<string, shader*> shaderMap;
       //for each shader, map the shader name to a pointer to a shader
@@ -57,24 +57,36 @@ namespace raytracer {
 
     // Shape or Instance
     if (v.first == "shape") {
-      Shape *s = parseShapeData(v);
-
-      shapeList.push_back(s);
+      // Shape *s = parseShapeData(v);
+      // cout << "the shape name is:\n";
+      // cout << s->name << endl;
+      // shapeList.push_back(s);
+      parseShapeData(v);
     }
 
     if (v.first == "camera") {
       this->cameraList.push_back(parseCameraData(v));
     }
-
   }
 
-  Shape* Scene::parseShapeData(ptree::value_type const &v) {
-    //v.second.get < std::string > ("intensity")
+  void Scene::parseShapeData(ptree::value_type const &v) {
+    //	  v.second.get < std::string > ("intensity")
     std::istringstream buffer;
+    Shape *s;
 
-    string type, name;
+    string type, name, shaderName;
     type = v.second.get<std::string>("<xmlattr>.type");
     name = v.second.get<std::string>("<xmlattr>.name");
+
+    shaderName = v.second.get<std::string>("<xmlattr>.shader");
+    cout << "shader name: "<< shaderName << endl;
+    Shader *shadr;
+
+    std::map<string, Shader*>::iterator iter;
+    iter = allShaders.find(shaderName);
+    assert(iter != allShaders.end());
+    cout << iter->second->getColor() << endl;
+    shadr = iter->second;
 
     if (type == "sphere") {
       float radius;
@@ -82,16 +94,33 @@ namespace raytracer {
       buffer.str(v.second.get<string>("center"));
       buffer >> center; // Vector3D has overloaded <<
       buffer.clear();
-
-      cout << "Sphere's center is: " << center << endl;
       radius = v.second.get<float>("radius");
+      s = new Sphere(center, radius, shadr);
+      //}
+      shapeList.push_back(s);
+      //return s;
+    } else if(type == "triangle") {
+      Vector3D v0, v1, v2;
+      buffer.str(v.second.get<string>("v0"));
+      buffer >> v0;
+      buffer.clear();
 
-      Shape *s = new Sphere(center, radius);
-      cout << "shape center and radius are" << s->getCenter() << " and "
-	   << radius << endl;
-      return s;
+      buffer.str(v.second.get<string>("v1"));
+      buffer >> v1;
+      buffer.clear();
+
+      buffer.str(v.second.get<string>("v2"));
+      buffer >> v2;
+      buffer.clear();
+      s = new Triangle(v0, v1, v2, shadr);
+      shapeList.push_back(s);
+    } else {
+      // cout << "unkown shape type\n";
+      // Vector3D center(0.0,0.0,0.0);
+      // Shape *s = new Sphere(center, 0.1);
     }
   }
+
 
   Camera* Scene::parseCameraData(const ptree::value_type &v) {
     std::istringstream buf;
@@ -143,10 +172,32 @@ namespace raytracer {
 
   }
 
-  void Scene::render(std::string outFileName, int width, int height) {
-    // cout << "image rendered to " << outFileName << ".\n"
-    // 	 << "with width " << width << " and height " << height << endl;
+  void Scene::parseShaderData(const ptree::value_type &v) {
+    Shader* shader;
+    std::istringstream buffer;
+    std::string type, name;
+    boost::optional<std::string> optShaderRef =
+      v.second.get_optional<std::string>("<xmlattr>.ref");
+    type = v.second.get<std::string>("<xmlattr>.type");
+    name = v.second.get<std::string>("<xmlattr>.name");
 
+    //if(!optShaderRef) {// did no find the shader,create a new one.
+    if (type == "Lambertian") {
+      shader = new LambertianShader();
+      sivelab::Vector3D kd;
+      buffer.str( v.second.get<std::string>("diffuse") );
+      buffer >> kd;
+      buffer.clear();
+      shader->setColor(kd);
+
+      allShaders.insert(std::pair<string, Shader*>(name, shader));
+      // } else{
+      // 	cout << "Shader reference already loaded.\n";
+      // }
+    }
+  }
+
+  void Scene::render(std::string outFileName, int width, int height) {
     png::image<png::rgb_pixel> imageData(width, height);
     Vector3D color;
     Ray r;
@@ -162,11 +213,8 @@ namespace raytracer {
 
     for (size_t y = 0; y < imageData.get_height(); ++y) {
       for (size_t x = 0; x < imageData.get_width(); ++x) {
-
-	//xassert((y >= 0) && (y < height) && x >= 0 && x < width);
+	//assert((y >= 0) && (y < height) && x >= 0 && x < width);
 	r = selectedCamera->computeRay(x, y, r);
-
-	cout << "ray dir is:" << r.direction << endl;
 	color = computeRayColor(r, tmin, tmax);
 	imageData[y][x] = png::rgb_pixel(color[0] * 255.0, color[1] * 255.0,
 					 color[2] * 255.0);
@@ -175,27 +223,37 @@ namespace raytracer {
     imageData.write(outFileName);
   }
 
+
+
   // find closest object
   // apply_shader()
   // return color;
   Vector3D Scene::computeRayColor(Ray &ray, float tmin, float &tmax) {
     Shape *nearestShape;
-    float marginError = .1f;
-    float distance = 0.0;
+    float marginError = .001f;
+    float smallestDist = 50000.0;
     Shape *currShape;
     /******to replace with shaders****/
     Vector3D tempColor(0.0, 0.0, 0.0);
     /*********************************/
+    struct HitInfo hitStruct;
+    /** TOBE REPLACED BY BVH**/
     for (int i = 0; i < this->shapeList.size(); i++) {
-      currShape = this->shapeList.at(i);
-
-      struct HitInfo hitStruct = currShape->closestHit(ray, tmin, tmax);
-      if (hitStruct.hit) {
-	tempColor = hitStruct.shader->getColor();
-	cout << "got a hit\n";
+      currShape = this->shapeList[i];
+      hitStruct = currShape->closestHit(ray, tmin, tmax);
+      if (hitStruct.hit && hitStruct.distance <= smallestDist ) {
+	Shader *sh = hitStruct.shader;
+	tempColor = sh->getColor();
+	smallestDist = hitStruct.distance;
+      } else {
+	//tempColor.set(0.0, 0.0, 0.0);
       }
     }
+    /********/
+
     return tempColor;
   }
+
+
 
 } /** end  raytracer*/

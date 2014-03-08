@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
   args.process(argc, argv);
   string filename = args.inputFileName;
 
-  runTests(args);
+  //runTests(args);
 
   XMLSceneParser xmlParser;
 
@@ -158,7 +158,6 @@ int main(int argc, char *argv[])
   assert(scene->shapeList.size() > 0);
   assert(scene->cameraList.size() > 0);
 
-  //cout << "shape list[0]: " << scene->shapeList.at(0)->getCenter() << endl;
   scene->render(args.outputFileName, args.width, args.height);
   return 0;
 }

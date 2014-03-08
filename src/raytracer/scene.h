@@ -14,6 +14,10 @@
 #include "SceneDataContainer.h"
 #include "png++/png.hpp"
 #include "perspective_camera.h"
+#include "lambertian_shader.h"
+#include "sphere.h"
+#include "triangle.h"
+
 
 using namespace std;
 using namespace sivelab;
@@ -36,18 +40,21 @@ namespace raytracer {
   class Scene : public SceneElementCreator {
   public:
     Scene() {}
-    virtual ~Scene(){}
+    virtual ~Scene() {}
 
     std::vector<Camera*> cameraList;
     std::vector<Shape*> shapeList;
-    //std::vector<Shader*> shaderList(10, Shader*());
+    std::map<string, Shader*> allShaders;
     std::vector<Light*> lightList;
 
     void instance(ptree::value_type const &v);
 
-    Shape* parseShapeData(ptree::value_type const &v);
+    /* inserts into shapeList a shape constructed from parsed data.*/
+    void parseShapeData(ptree::value_type const &v);
 
-    Camera* parseCameraData(const ptree::value_type &v);
+    Camera* parseCameraData( ptree::value_type const &v);
+
+    void parseShaderData(ptree::value_type const &v);
 
     void render(std::string outFileName, int width, int height );
 
