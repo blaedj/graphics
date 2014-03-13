@@ -21,11 +21,11 @@ namespace raytracer {
       return color;
     }
 
-    virtual Vector3D calculateColor() {
+    virtual Vector3D calculateColor(Vector3D intensity, Vector3D light, Vector3D normal, Vector3D view) {
       return color;
     };
 
-    virtual void setColor(Vector3D color){
+    virtual void setColor(Vector3D color) {
       this->color.set(color[0], color[1], color[2]);
     };
 

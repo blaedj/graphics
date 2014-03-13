@@ -22,6 +22,8 @@ namespace raytracer {
 
     Vector3D getCenter() {return this->center;}
 
+    Vector3D normalAtPoint(Vector3D point);
+
   private:
     Vector3D center;
     double radius;

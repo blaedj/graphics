@@ -60,6 +60,8 @@ namespace raytracer {
 
     Vector3D computeRayColor(Ray &ray, float tmin, float &tmax);
 
+  private:
+    HitInfo getNearestHit(float tmin, Ray& ray, float& tmax);
   };
 }
 

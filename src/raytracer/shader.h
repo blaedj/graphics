@@ -13,7 +13,8 @@ namespace raytracer {
     Shader() {}
     virtual ~Shader() { }
 
-    virtual Vector3D calculateColor() = 0;
+    virtual Vector3D calculateColor(Vector3D intensity, Vector3D lightDir, Vector3D normal, Vector3D viewDir) = 0;
+
     virtual Vector3D getColor() = 0;
     virtual void setColor(Vector3D color) = 0;
 

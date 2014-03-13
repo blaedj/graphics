@@ -21,11 +21,14 @@ namespace raytracer {
 
     virtual HitInfo closestHit(const Ray &ray, float tmin, float &tmax) = 0;
     virtual Vector3D applyShader() = 0;
+    virtual Vector3D normalAtPoint(Vector3D point) = 0;
     //virtual Vector3D getCenter() = 0;
     Basis ortho;
     Vector3D middleCenter;
     string name;
     Shader* getShader() { return this->shader;}
+
+
   protected:
     Shader* shader;
 

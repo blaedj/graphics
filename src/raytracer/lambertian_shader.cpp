@@ -16,8 +16,15 @@ namespace raytracer {
     diffuseColor = color;
   }
 
-  // Vector3D LambertianShader::getColor(Vector3D intensity, Vector3D light, Vector3D surfaceNormal, Vector3D view) {
-  // }
+  Vector3D LambertianShader::calculateColor(Vector3D intensity, Vector3D lightDir,
+					    Vector3D normal, Vector3D view) {
+    //color: diffuse * intensity * max(0, normal dot lightDir) for each red, green and blue
+    float red = diffuseColor[0] * intensity[0] * max(0.0, normal.dot(lightDir));
+    float green = diffuseColor[1] * intensity[1] * max(0.0, normal.dot(lightDir));
+    float blue = diffuseColor[2] * intensity[2] * max(0.0, normal.dot(lightDir));
+    return Vector3D(red, green, blue);
+    //return diffuseColor;
+  }
 
 
 } /** end  raytracer*/

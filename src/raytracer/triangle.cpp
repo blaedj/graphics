@@ -77,5 +77,9 @@ namespace raytracer {
     return this->shader->getColor();
   }
 
+  Vector3D Triangle::normalAtPoint(Vector3D point) {
+    return this->normal;
+  }
+
 
 } /** end  raytracer*/

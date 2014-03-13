@@ -9,7 +9,7 @@
 
 //private Shape* lastObjectHit;
 
-//void visiblityQuery(----){
+//void visiblityQuery(----) {
 //check the ray against last known hit object (last object hit)
 // compare the ray against that last hit object first, then start the typical
 // 'anyHit' check.
@@ -33,12 +33,7 @@ namespace raytracer {
     Vector3D getColor();
     virtual void setColor(Vector3D color);
 
-    Vector3D getColor(Vector3D intensity, Vector3D light, Vector3D surfaceNormal, Vector3D view);
-
-    virtual Vector3D calculateColor() {
-      Vector3D vec;
-      return vec;
-    };
+    Vector3D calculateColor(Vector3D intensity, Vector3D lightDir, Vector3D normal, Vector3D view);
 
   private:
     Vector3D diffuseColor;

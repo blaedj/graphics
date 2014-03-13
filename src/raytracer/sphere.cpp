@@ -35,11 +35,14 @@ namespace raytracer {
     hitStruct.hit = false;
     float u, f, t0, t1; // intersection distance 't'
     float a = pow(ray.direction.dot(ray.origin - this->center), 2.0);
+
     float b = (ray.origin - this->center).dot(ray.origin - this->center);
+
     float c = (b - (this->radius * this->radius));
 
 
     float discriminant = a - ((ray.direction.dot(ray.direction)) * (c));
+
     if ( discriminant < 0.0 ) {
       hitStruct.hit = false;
       return hitStruct;
@@ -62,7 +65,7 @@ namespace raytracer {
       } else{
 	t0 = (f + distanceRoot) / u;
 	t1 = (f - distanceRoot) / u;
-	hitStruct.distance = (t0 < t1) ? t1 : t0;
+	hitStruct.distance = (t0 > t1) ? t1 : t0;
 	if(!inBounds(hitStruct, tmin, tmax)) {
 	  hitStruct.hit = false;
 	  return hitStruct;
@@ -81,5 +84,11 @@ namespace raytracer {
     return hitStruct.distance > tmin && hitStruct.distance < tmax;
   }
 
+  Vector3D Sphere::normalAtPoint(Vector3D point) {
+    Vector3D normal;
+    normal = point - this->center;
+    normal.normalize();
+    return normal;
+  }
 
 } /** end raytracer */

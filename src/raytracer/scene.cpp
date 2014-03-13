@@ -8,7 +8,6 @@ using namespace sivelab;
 namespace raytracer {
 
   bool hitStructValid(HitInfo hitStruct, float tmin, float &tmax);
-  void print_tree(const ptree& pt, int level);
 
   void Scene::instance(const ptree::value_type &v) {
 
@@ -28,7 +27,7 @@ namespace raytracer {
       std::string type;
       sivelab::Vector3D position, intensity;
       std::istringstream buf;
-
+      Light *light;
       type = v.second.get<std::string>("<xmlattr>.type");
 
       buf.str(v.second.get<std::string>("position"));
@@ -41,8 +40,8 @@ namespace raytracer {
 
       if (type == "point") {
 	// Instance the new Point light...
-	//std::cout << "Found a point light..." << std::endl;
-	lightList.push_back(new Light());
+	light = new Light(intensity, position);
+	lightList.push_back(light);
       }
     }
 
@@ -69,18 +68,6 @@ namespace raytracer {
       this->cameraList.push_back(parseCameraData(v));
     }
   }
-
-
-  //  void print_tree(const ptree& pt, int level)
-  //  {
-  //    const std::string sep(2 * level, ' ');
-  //    BOOST_FOREACH(const ptree::value_type &v, pt) {
-  //      std::cout
-  //	<< sep
-  //	<< q(v.first) << " : " << q(v.second.data()) << "\n";
-  //      print_tree(v.second, level + 1);
-  //    }
-  //  }
 
   void Scene::parseShapeData(ptree::value_type const &v) {
     //	  v.second.get < std::string > ("intensity")
@@ -129,6 +116,8 @@ namespace raytracer {
       s = new Triangle(v0, v1, v2, shadr);
       shapeList.push_back(s);
     } else {
+      s = new Sphere(Vector3D(0,0,0), 0.0);
+      shapeList.push_back(s);
       // cout << "unkown shape type\n";
       // Vector3D center(0.0,0.0,0.0);
       // Shape *s = new Sphere(center, 0.1);
@@ -235,6 +224,7 @@ namespace raytracer {
     /**END HACK***/
 
     for (size_t y = 0; y < imageData.get_height(); ++y) {
+      //    for (size_t y = imageData.get_height();y > 0; --y) {
       for (size_t x = 0; x < imageData.get_width(); ++x) {
 	//assert((y >= 0) && (y < height) && x >= 0 && x < width);
 	r = selectedCamera->computeRay(x, y, r);
@@ -246,7 +236,25 @@ namespace raytracer {
     imageData.write(outFileName);
   }
 
+  HitInfo Scene::getNearestHit(float tmin, Ray& ray, float& tmax) {
 
+    float smallestDist = FLT_MAX;
+    Shape *currShape;
+    HitInfo hitStruct;
+    HitInfo nearestHit;
+
+    /** TOBE REPLACED BY BVH**/
+    for (int i = 0; i < this->shapeList.size(); i++) {
+      currShape = this->shapeList[i];
+      hitStruct = currShape->closestHit(ray, tmin, tmax);
+
+      if (hitStruct.hit && hitStruct.distance <= smallestDist) {
+	smallestDist = hitStruct.distance;
+	nearestHit = hitStruct;
+      }
+    }
+    return nearestHit;
+  }
 
   // find closest object
   // apply_shader()
@@ -254,25 +262,38 @@ namespace raytracer {
   Vector3D Scene::computeRayColor(Ray &ray, float tmin, float &tmax) {
     Shape *nearestShape;
     float marginError = .001f;
-    float smallestDist = 50000.0;
-    Shape *currShape;
     Vector3D tempColor(0.0, 0.0, 0.0);
+    Vector3D backgroundColor(0.0, 0.0, 0.0);
     /*********************************/
-    struct HitInfo hitStruct;
-    /** TOBE REPLACED BY BVH**/
-    for (int i = 0; i < this->shapeList.size(); i++) {
-      currShape = this->shapeList[i];
-      hitStruct = currShape->closestHit(ray, tmin, tmax);
-      if (hitStruct.hit && hitStruct.distance <= smallestDist ) {
-	Shader *sh = hitStruct.shader;
-	tempColor = sh->getColor();
-	smallestDist = hitStruct.distance;
-      } else {
-	//tempColor.set(0.0, 0.0, 0.0);
-      }
-    }
-    /********/
+    struct HitInfo nearestHit;
 
+    /** TOBE REPLACED BY BVH**/
+    nearestHit = getNearestHit(tmin, ray, tmax);
+    // cout << "just got nearest hit\n";
+    if(nearestHit.hit) {
+      nearestShape = nearestHit.hitShape;
+      //	  cout << nearestShape->name << endl;
+      //cout << "just normalized\n";
+      Light *l;
+      Shader *sh = nearestHit.shader;
+      Vector3D pointHit = ray.origin + (ray.direction * nearestHit.distance);
+      Vector3D viewDir = cameraList[0]->location - pointHit;
+      viewDir.normalize();
+
+      for ( int i = 0; i < lightList.size(); ++i ) {
+	l = lightList[i];
+	Vector3D lightDir = l->position - pointHit;
+	lightDir.normalize();
+
+	Vector3D intensity, surfaceNormal;
+	intensity = l->intensity;
+	surfaceNormal = nearestShape->normalAtPoint(pointHit);
+
+	tempColor += sh->calculateColor(intensity, lightDir, surfaceNormal, viewDir);
+      }
+    } else { // ray hit nothing, set color to background color.
+      tempColor.set(0.0, 0.0, 0.0);
+    }
     return tempColor;
   }
 

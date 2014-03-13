@@ -17,6 +17,7 @@ namespace raytracer {
 
     virtual HitInfo closestHit(const Ray &ray, float tmin, float &tmax);
     virtual Vector3D applyShader();
+    virtual Vector3D normalAtPoint(Vector3D point);
 
   private:
     Vector3D p1;
