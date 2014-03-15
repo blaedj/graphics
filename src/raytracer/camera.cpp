@@ -32,7 +32,7 @@ namespace raytracer {
     this->focalLength = focalLength;
     this->imagePlaneWidth = imagePlaneWidth;
     // construct a basis from 2 vectors
-    Vector3D W(-1 * direction);
+    Vector3D W(-1.0 * direction);
     W.normalize();
 
     Vector3D upDir(0.0, 1.0, 0.0);

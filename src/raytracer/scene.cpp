@@ -197,7 +197,22 @@ namespace raytracer {
       // } else{
       // 	cout << "Shader reference already loaded.\n";
       // }
-    } else {
+    } else if(type == "BlinnPhong") {
+      Vector3D diffuse, specular;
+      float phongExp;
+
+      buffer.str( v.second.get<std::string>("diffuse") );
+      buffer >> diffuse;
+      buffer.clear();
+
+      buffer.str( v.second.get<std::string>("specular") );
+      buffer >> specular;
+      buffer.clear();
+
+      phongExp = v.second.get<float>("phongExp");
+      shader = new BlinnPhong(diffuse, specular, phongExp, 0.0);
+      allShaders.insert(std::pair<string, Shader*>(name, shader));
+    }else {
       shader = new LambertianShader();
       sivelab::Vector3D kd;
       buffer.str( v.second.get<std::string>("diffuse") );
@@ -223,8 +238,12 @@ namespace raytracer {
     selectedCamera->imageHeight = height;
     /**END HACK***/
 
-    for (size_t y = 0; y < imageData.get_height(); ++y) {
-      for (size_t x = 0; x < imageData.get_width(); ++x) {
+    //    for (size_t y = 0; y < imageData.get_height(); ++y) {
+      //      for (size_t x = 0; x < imageData.get_width(); ++x) {
+    for(unsigned int idx=0; idx<imageData.get_height()*imageData.get_width(); ++idx){
+
+      size_t x = idx % width;
+      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imageData.get_width())) );
 
 	assert(y >= 0);
 	assert(y <= height);
@@ -232,11 +251,11 @@ namespace raytracer {
 	r = selectedCamera->computeRay(x, y, r);
 
 	color = computeRayColor(r, tmin, tmax);
-
 	color.clamp(0.0, 1.0);
 	imageData[y][x] = png::rgb_pixel(color[0] * 255, color[1] * 255,
 					 color[2] * 255);
-      }
+	//      }
+	//    }
     }
     imageData.write(outFileName);
   }
@@ -284,7 +303,7 @@ namespace raytracer {
 
     float marginError = .001f;
     Vector3D tempColor(0.0, 0.0, 0.0);
-    Vector3D backgroundColor(0,0,0);
+    Vector3D backgroundColor(0.1,0.1,0.1);
     /*********************************/
     struct HitInfo nearestHit;
 
@@ -292,7 +311,7 @@ namespace raytracer {
     nearestHit = getNearestHit(tmin, ray, tmax);
 
     if(!nearestHit.hit){
-      return tempColor;
+      return backgroundColor;
     }else {
       Shape *nearestShape;
       nearestShape = nearestHit.hitShape;

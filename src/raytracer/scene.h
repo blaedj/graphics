@@ -17,7 +17,7 @@
 #include "lambertian_shader.h"
 #include "sphere.h"
 #include "triangle.h"
-
+#include "blinn_phong.h"
 
 using namespace std;
 using namespace sivelab;

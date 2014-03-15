@@ -49,6 +49,7 @@ add_library(raytracer
   shader.h
   solid_shader.h
   lambertian_shader.cpp lambertian_shader.h
+  blinn_phong.cpp blinn_phong.h
   shape_creator.h
 )
 
