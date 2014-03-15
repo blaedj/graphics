@@ -42,41 +42,29 @@ namespace raytracer {
 
 
     float discriminant = a - ((ray.direction.dot(ray.direction)) * (c));
-
-    if ( discriminant < 0.0 ) {
-      hitStruct.hit = false;
-      return hitStruct;
-    } else {
-      u = ray.direction.dot(ray.direction);
-      f = (-1.0) * ray.direction.dot(ray.origin - this->center);
-      float distanceRoot = sqrtf(discriminant);
-
-      if(discriminant < eps && discriminant > -eps) {
-	hitStruct.distance = f / u;
-	if(!inBounds(hitStruct, tmin, tmax)) {
+    //discriminant = //b^2 - 4 * a * c;
+	if ( discriminant < 0 ) {
 	  hitStruct.hit = false;
 	  return hitStruct;
-	}
-	//TODO: need to add surface Normal,
-	hitStruct.shader = this->shader;
-	hitStruct.hit = true;
-	hitStruct.hitShape = this;
-	return hitStruct;
-      } else{
-	t0 = (f + distanceRoot) / u;
-	t1 = (f - distanceRoot) / u;
-	hitStruct.distance = (t0 > t1) ? t1 : t0;
-	if(!inBounds(hitStruct, tmin, tmax)) {
-	  hitStruct.hit = false;
+	} else {
+	  u = ray.direction.dot(ray.direction);
+	  f = (-1.0) * ray.direction.dot(ray.origin - this->center);
+	  float distanceRoot = sqrtf(discriminant);
+
+
+	  t0 = (f + distanceRoot) / u;
+	  t1 = (f - distanceRoot) / u;
+	  hitStruct.distance = (t0 > t1) ? t1 : t0;
+	  if(!inBounds(hitStruct, tmin, tmax)) {
+	    hitStruct.hit = false;
+	    return hitStruct;
+	  }
+
+	  hitStruct.shader = this->shader;
+	  hitStruct.hitShape = this;
+	  hitStruct.hit = true;
 	  return hitStruct;
 	}
-
-	hitStruct.shader = this->shader;
-	hitStruct.hitShape = this;
-	hitStruct.hit = true;
-	return hitStruct;
-      }
-    }
   }
 
   bool inBounds(HitInfo hitStruct, float tmin, float &tmax )
