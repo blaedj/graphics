@@ -62,6 +62,8 @@ namespace raytracer {
 
   private:
     HitInfo getNearestHit(float tmin, Ray& ray, float& tmax);
+
+    bool anyHit(float tmin, Ray& ray, float& tmax);
   };
 }
 

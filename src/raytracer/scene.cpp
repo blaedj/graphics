@@ -224,13 +224,18 @@ namespace raytracer {
     /**END HACK***/
 
     for (size_t y = 0; y < imageData.get_height(); ++y) {
-      //    for (size_t y = imageData.get_height();y > 0; --y) {
       for (size_t x = 0; x < imageData.get_width(); ++x) {
-	//assert((y >= 0) && (y < height) && x >= 0 && x < width);
+
+	assert(y >= 0);
+	assert(y <= height);
+	assert(x >= 0 && x < width);
 	r = selectedCamera->computeRay(x, y, r);
+
 	color = computeRayColor(r, tmin, tmax);
-	imageData[y][x] = png::rgb_pixel(color[0] * 255.0, color[1] * 255.0,
-					 color[2] * 255.0);
+
+	color.clamp(0.0, 1.0);
+	imageData[y][x] = png::rgb_pixel(color[0] * 255, color[1] * 255,
+					 color[2] * 255);
       }
     }
     imageData.write(outFileName);
@@ -256,24 +261,42 @@ namespace raytracer {
     return nearestHit;
   }
 
+  bool Scene::anyHit(float tmin, Ray& ray, float& tmax){
+    Shape *currShape;
+    HitInfo hitStruct;
+
+    /** TOBE REPLACED BY BVH**/
+    for (int i = 0; i < this->shapeList.size(); i++) {
+      currShape = this->shapeList[i];
+      hitStruct = currShape->closestHit(ray, tmin, tmax);
+
+      if (hitStruct.hit) {
+	return true;
+      }
+    }
+    return false;
+  }
+
   // find closest object
   // apply_shader()
   // return color;
   Vector3D Scene::computeRayColor(Ray &ray, float tmin, float &tmax) {
-    Shape *nearestShape;
+
     float marginError = .001f;
     Vector3D tempColor(0.0, 0.0, 0.0);
-    Vector3D backgroundColor(0.0, 0.0, 0.0);
+    Vector3D backgroundColor(0,0,0);
     /*********************************/
     struct HitInfo nearestHit;
 
     /** TOBE REPLACED BY BVH**/
     nearestHit = getNearestHit(tmin, ray, tmax);
-    // cout << "just got nearest hit\n";
-    if(nearestHit.hit) {
+
+    if(!nearestHit.hit){
+      return tempColor;
+    }else {
+      Shape *nearestShape;
       nearestShape = nearestHit.hitShape;
-      //	  cout << nearestShape->name << endl;
-      //cout << "just normalized\n";
+
       Light *l;
       Shader *sh = nearestHit.shader;
       Vector3D pointHit = ray.origin + (ray.direction * nearestHit.distance);
@@ -284,16 +307,19 @@ namespace raytracer {
 	l = lightList[i];
 	Vector3D lightDir = l->position - pointHit;
 	lightDir.normalize();
+	Ray shadowRay(pointHit, lightDir );
 
-	Vector3D intensity, surfaceNormal;
-	intensity = l->intensity;
-	surfaceNormal = nearestShape->normalAtPoint(pointHit);
-
-	tempColor += sh->calculateColor(intensity, lightDir, surfaceNormal, viewDir);
+	if(!anyHit(marginError, shadowRay, tmax )) {
+	  Vector3D intensity, surfaceNormal;
+	  intensity = l->intensity;
+	  surfaceNormal = nearestShape->normalAtPoint(pointHit);
+	  tempColor += sh->calculateColor(intensity, lightDir, surfaceNormal, viewDir);
+	}
       }
-    } else { // ray hit nothing, set color to background color.
-      tempColor.set(0.0, 0.0, 0.0);
-    }
+    }//  else { // ray hit nothing, set color to background color.
+    //   tempColor.set(0.0, 0.0, 0.0);
+    //   //return backgroundColor;
+    // }
     return tempColor;
   }
 
