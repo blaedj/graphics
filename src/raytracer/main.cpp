@@ -161,7 +161,6 @@ int main(int argc, char *argv[])
   assert(scene->lightList.size() > 0);
   assert(scene->shapeList.size() > 0);
   assert(scene->cameraList.size() > 0);
-
   scene->render(args.outputFileName, args.width, args.height);
 
   final=clock()-init;

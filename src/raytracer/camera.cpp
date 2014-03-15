@@ -60,13 +60,13 @@ namespace raytracer {
   Vector3D Camera::getNonColinear(Vector3D vec) {
     Vector3D nonColinearVec(vec);
 
-    if(vec[0] <= vec[1] && vec[0] <= vec[2]) {
-      nonColinearVec.set(1.0, vec[1], vec[2]);
-    } else if(vec[1] <= vec[0] && vec[1] <= vec[2]) {
-      nonColinearVec.set(vec[0], 1.0, vec[2]);
-    } else if(vec[2] <= vec[1] && vec[2] <= vec[1]) {
-      nonColinearVec.set(vec[0], vec[1], 1.0);
-    }
+    // if(vec[0] <= vec[1] && vec[0] <= vec[2]) {
+    //   nonColinearVec.set(1.0, vec[1], vec[2]);
+    // } else if(vec[1] <= vec[0] && vec[1] <= vec[2]) {
+    //   nonColinearVec.set(vec[0], 1.0, vec[2]);
+    // } else if(vec[2] <= vec[1] && vec[2] <= vec[1]) {
+    //   nonColinearVec.set(vec[0], vec[1], 1.0);
+    // }
     return nonColinearVec;
   }
 

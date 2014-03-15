@@ -13,14 +13,14 @@ namespace raytracer {
 
     if (v.first == "sceneParameters") {
       //bool useEnvMap = false; // what is this for?
-      Vector3D bg_color;
-      string envmapPrefix;
+      // Vector3D bg_color;
+      // string envmapPrefix;
 
-      //TODO: Actually use these maybe?
-      boost::optional<std::string> pBGColor = v.second.get_optional<
-	std::string>("bgColor");
-      boost::optional<std::string> pEnvMapPrefix = v.second.get_optional<
-	std::string>("envMapPrefix");
+      // //TODO: Actually use these maybe?
+      // boost::optional<std::string> pBGColor = v.second.get_optional<
+      // 	std::string>("bgColor");
+      // boost::optional<std::string> pEnvMapPrefix = v.second.get_optional<
+      // 	std::string>("envMapPrefix");
     }
 
     if (v.first == "light") {
@@ -39,6 +39,7 @@ namespace raytracer {
       buf.clear();
 
       if (type == "point") {
+
 	// Instance the new Point light...
 	light = new Light(intensity, position);
 	lightList.push_back(light);
@@ -118,7 +119,7 @@ namespace raytracer {
     } else {
       s = new Sphere(Vector3D(0,0,0), 0.0);
       shapeList.push_back(s);
-      // cout << "unkown shape type\n";
+      cout << "unkown shape type\n";
       // Vector3D center(0.0,0.0,0.0);
       // Shape *s = new Sphere(center, 0.1);
     }
@@ -142,10 +143,10 @@ namespace raytracer {
     buf.clear();
 
     // LookAtPoint and ViewDir are optional, but one should be specified.
-    boost::optional<std::string> plookatPoint = v.second.get_optional<
-      std::string>("lookatPoint");
-    boost::optional<std::string> pviewDir = v.second.get_optional<std::string>(
-									       "viewDir");
+    boost::optional<std::string> plookatPoint =
+      v.second.get_optional<std::string>("lookatPoint");
+    boost::optional<std::string> pviewDir =
+      v.second.get_optional<std::string>("viewDir");
 
     if (plookatPoint) {
       lookatSet = true;
@@ -238,12 +239,15 @@ namespace raytracer {
     selectedCamera->imageHeight = height;
     /**END HACK***/
 
-    //    for (size_t y = 0; y < imageData.get_height(); ++y) {
-      //      for (size_t x = 0; x < imageData.get_width(); ++x) {
-    for(unsigned int idx=0; idx<imageData.get_height()*imageData.get_width(); ++idx){
+    cout << "width :" << width << endl;
 
-      size_t x = idx % width;
-      size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imageData.get_width())) );
+    cout << "imageData.get_width() :" << imageData.get_width() << endl;
+    for (size_t y = 0.0; y < imageData.get_height(); ++y) {
+      for (size_t x = 0.0; x < imageData.get_width(); ++x) {
+	// for(unsigned int idx=0; idx<imageData.get_height()*imageData.get_width(); ++idx){
+
+	//   size_t x = idx % width;
+	//   size_t y = static_cast<size_t>( floor(idx / static_cast<float>(imageData.get_width())) );
 
 	assert(y >= 0);
 	assert(y <= height);
@@ -251,12 +255,14 @@ namespace raytracer {
 	r = selectedCamera->computeRay(x, y, r);
 
 	color = computeRayColor(r, tmin, tmax);
+
 	color.clamp(0.0, 1.0);
+
 	imageData[y][x] = png::rgb_pixel(color[0] * 255, color[1] * 255,
 					 color[2] * 255);
-	//      }
-	//    }
+      }
     }
+    // }
     imageData.write(outFileName);
   }
 
@@ -301,7 +307,7 @@ namespace raytracer {
   // return color;
   Vector3D Scene::computeRayColor(Ray &ray, float tmin, float &tmax) {
 
-    float marginError = .001f;
+    float marginError = .0001f;
     Vector3D tempColor(0.0, 0.0, 0.0);
     Vector3D backgroundColor(0.1,0.1,0.1);
     /*********************************/
@@ -322,16 +328,22 @@ namespace raytracer {
       Vector3D viewDir = cameraList[0]->location - pointHit;
       viewDir.normalize();
 
-      for ( int i = 0; i < lightList.size(); ++i ) {
+      for ( int i = 0; i < lightList.size(); i++ ) {
 	l = lightList[i];
 	Vector3D lightDir = l->position - pointHit;
 	lightDir.normalize();
 	Ray shadowRay(pointHit, lightDir );
 
 	if(!anyHit(marginError, shadowRay, tmax )) {
+	  assert(nearestHit.hitShape);
 	  Vector3D intensity, surfaceNormal;
 	  intensity = l->intensity;
+	  //	  cout << "nearShp name: \n";
+	  Shape *nearShp = nearestHit.hitShape;
+	  // cout << nearShp->name << endl;
+	  // cout << "gonna set normal\n";
 	  surfaceNormal = nearestShape->normalAtPoint(pointHit);
+	  //	  cout << "surfaceNormal :" << surfaceNormal << endl;
 	  tempColor += sh->calculateColor(intensity, lightDir, surfaceNormal, viewDir);
 	}
       }

@@ -73,10 +73,10 @@ namespace raytracer {
   }
 
   Vector3D Sphere::normalAtPoint(Vector3D point) {
-    Vector3D normal;
-    normal = point - this->center;
-    normal.normalize();
-    return normal;
+    Vector3D normalAt;
+    normalAt = point - this->center;
+    normalAt.normalize();
+    return normalAt;
   }
 
 } /** end raytracer */
