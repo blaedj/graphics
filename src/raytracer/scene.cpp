@@ -254,6 +254,7 @@ namespace raytracer {
       hitStruct = currShape->closestHit(ray, tmin, tmax);
 
       if (hitStruct.hit && hitStruct.distance <= smallestDist) {
+	cout << "hit";
 	smallestDist = hitStruct.distance;
 	nearestHit = hitStruct;
       }

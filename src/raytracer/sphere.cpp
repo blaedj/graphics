@@ -32,39 +32,53 @@ namespace raytracer {
     // t: a(t * t) + B*t + c = 0?
     float eps = .001;
     struct HitInfo hitStruct;
-    hitStruct.hit = false;
-    float u, f, t0, t1; // intersection distance 't'
-    float a = pow(ray.direction.dot(ray.origin - this->center), 2.0);
+    hitStruct.hit = true;
+    float a, b, c, distance;
 
-    float b = (ray.origin - this->center).dot(ray.origin - this->center);
+    Vector3D o = ray.origin;
+    Vector3D d = ray.direction;
+    Vector3D center = this->center;
+    float r = this->radius;
 
-    float c = (b - (this->radius * this->radius));
+    a = d.dot(d);
+    b = d.dot(o);
+    c = o.dot(o) - (r * r);
 
+    float t0, t1;
+    float discriminant = (b * b) - 4 * a * c;
+    if(discriminant < 0) { // no real solutions, so no intersection.
+      hitStruct.hit = false;// no hit!
+      return hitStruct;
+    } else { //there are real solutions
+      float discSqrt = sqrtf(discriminant);
+      float q;
+      if(b < 0)
+	q = (-b - discSqrt)/ 2.0;
+      else
+	q = (-b + discSqrt)/ 2.0;
 
-    float discriminant = a - ((ray.direction.dot(ray.direction)) * (c));
-    //discriminant = //b^2 - 4 * a * c;
-	if ( discriminant < 0 ) {
-	  hitStruct.hit = false;
-	  return hitStruct;
-	} else {
-	  u = ray.direction.dot(ray.direction);
-	  f = (-1.0) * ray.direction.dot(ray.origin - this->center);
-	  float distanceRoot = sqrtf(discriminant);
+      t0 = q / a;
+      t1 = c / q;
 
-
-	  t0 = (f + distanceRoot) / u;
-	  t1 = (f - distanceRoot) / u;
-	  hitStruct.distance = (t0 > t1) ? t1 : t0;
-	  if(!inBounds(hitStruct, tmin, tmax)) {
-	    hitStruct.hit = false;
-	    return hitStruct;
-	  }
-
-	  hitStruct.shader = this->shader;
-	  hitStruct.hitShape = this;
-	  hitStruct.hit = true;
-	  return hitStruct;
-	}
+      if(t0 > t1){ // set t1 to be the greatest solution.
+	float temp = t0;
+	t0 = t1;
+	t1 = temp;
+      }
+      if(t1 > 0){
+	if(t0 < 0.0) distance = t1; // t0 is not a valid solution, so distance is t1
+	else distance = t0; // t0 is the minimal solution and is > 0, so it is the distance of the closest hit.
+      } else { // the greatest solution is < 0, so no intersection
+	hitStruct.hit = false;
+	return hitStruct;
+      }
+      // fill in point of intersection information
+      hitStruct.hit = true;
+      hitStruct.distance = distance;
+      hitStruct.hitShape = this;
+      hitStruct.shader = this->shader;
+      return hitStruct;
+    }
   }
 
   bool inBounds(HitInfo hitStruct, float tmin, float &tmax )
