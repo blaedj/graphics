@@ -16,12 +16,13 @@
 #include "scene.h"
 #include "shape.h"
 #include "basis.h"
+#include "raytracer.h"
 
 using namespace sivelab;
 using namespace std;
 using namespace raytracer;
 
-
+bool useRaytracing(GraphicsArgs args);
 
 void testXMLparsing(string fileName) {
   XMLSceneParser xmlParser;
@@ -68,10 +69,22 @@ int main(int argc, char *argv[])
   assert(scene->shapeList.size() > 0);
   assert(scene->cameraList.size() > 0);
 
-  scene->render(args.outputFileName, args.width, args.height);
+  if(useRaytracing(args)){
+    Raytracer rt(scene, args);
+    rt.render();
+    ///    scene->render(args.outputFileName, args.width, args.height);
+  } else { // use rasterizer
+    Rasterizer raster(scene, args);
+    raster.render();
+  }
 
   final=clock()-init;
   cout << "render time was: " << (double)final / ((double)CLOCKS_PER_SEC) << " seconds.\n";
 
   return 0;
+}
+
+
+bool useRaytracing(GraphicsArgs args){
+  return false;
 }

@@ -47,6 +47,7 @@ add_library(raytracer
   lambertian_shader.cpp lambertian_shader.h
   blinn_phong.cpp blinn_phong.h
   shape_creator.h
+  raytracer.cpp raytracer.h
 )
 
 target_link_libraries(raytracer ${Boost_PROGRAM_OPTIONS_LIBRARIES})
