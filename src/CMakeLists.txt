@@ -42,3 +42,12 @@ ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib/)
 
 ENABLE_TESTING()
 ADD_SUBDIRECTORY(utests)
+
+add_executable(write_images
+  main.cpp
+  )
+target_link_libraries(write_images raytracer)
+target_link_libraries(write_images sive-rtutil)
+target_link_libraries(write_images ${Boost_PROGRAM_OPTIONS_LIBRARIES})
+target_link_libraries(write_images ${PNG_LIBRARY})
+target_link_libraries(write_images ${ZLIB_LIBRARY})
