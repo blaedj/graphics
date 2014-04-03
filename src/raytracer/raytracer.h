@@ -19,18 +19,22 @@ namespace raytracer {
   {
   public:
     Raytracer();
-    virtual ~Raytracer();
+    virtual ~Raytracer(){}
 
-    Raytracer(Scene scene, GraphicsArgs args);
+    Raytracer(Scene *scene, GraphicsArgs args);
 
-    void render(std::string outFileName, int width, int height );
+    void render();
 
     Vector3D computeRayColor(Ray &ray, float tmin, float &tmax);
 
   private:
     HitInfo getNearestHit(float tmin, Ray& ray, float& tmax);
     bool anyHit(float tmin, Ray& ray, float& tmax);
-    Scene scene;
+    Scene *scene;
+    GraphicsArgs args;
+    string outFileName;
+    int height;
+    int width;
 
 
   };

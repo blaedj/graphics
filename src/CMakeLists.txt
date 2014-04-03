@@ -1,6 +1,22 @@
 cmake_minimum_required (VERSION 2.8)
 project(graphicsBCJ)
 
+# --------------------------------------------------------------------
+# PNG and ZLIB
+#
+# This macro will attempt to locate the PNG include directories, link
+# directories and libraries. The INCLUDE_DIRECTORIES macro adds the
+# resulting include directories to the search path.
+# --------------------------------------------------------------------
+find_package(PNG REQUIRED)
+if (PNG_FOUND)
+  INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIR})
+else (PNG_FOUND)
+  MESSAGE(STATUS "Could not find the PNG Libraries!")
+endif (PNG_FOUND)
+
+
+
 SET (Boost_MULTITHREADED TRUE)
 
 # If you want to get more info on what the Find Boost macro is
@@ -22,7 +38,11 @@ LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/raytracer)
 LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/raytracer)
 
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/rasterizer)
+LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/rasterizer)
+
 ADD_SUBDIRECTORY(raytracer)
+ADD_SUBDIRECTORY(rasterizer)
 ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib/)
 
 
@@ -46,7 +66,9 @@ ADD_SUBDIRECTORY(utests)
 add_executable(write_images
   main.cpp
   )
+
 target_link_libraries(write_images raytracer)
+target_link_libraries(write_images rasterizer)
 target_link_libraries(write_images sive-rtutil)
 target_link_libraries(write_images ${Boost_PROGRAM_OPTIONS_LIBRARIES})
 target_link_libraries(write_images ${PNG_LIBRARY})

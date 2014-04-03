@@ -17,10 +17,13 @@
 #include "shape.h"
 #include "basis.h"
 #include "raytracer.h"
+#include "rasterizer.h"
 
 using namespace sivelab;
 using namespace std;
 using namespace raytracer;
+using namespace rasterizer;
+
 
 bool useRaytracing(GraphicsArgs args);
 
@@ -43,6 +46,7 @@ int runTests(GraphicsArgs args)
   float h = args.height;
   png::image< png::rgb_pixel > imData( w, h );
   testXMLparsing(args.inputFileName);
+  return 0;
 }
 
 int main(int argc, char *argv[])
@@ -86,5 +90,5 @@ int main(int argc, char *argv[])
 
 
 bool useRaytracing(GraphicsArgs args){
-  return false;
+  return true;
 }
