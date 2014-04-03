@@ -15,16 +15,18 @@
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
 
+#include "cube.h"
+
 class OpenGLRender
-{  
-public:   
-  
+{
+public:
+
   OpenGLRender(const int winWidth, const int winHeight);
   ~OpenGLRender() {}
 
   void run();
-       
-private:  
+
+private:
 
   int m_winWidth, m_winHeight;
   sf::Window *m_Window;
@@ -32,6 +34,6 @@ private:
   // Vertex Buffer Object related variables
   int m_numVertices;
   GLuint m_triangleVBO;
-};  
+};
 
 #endif

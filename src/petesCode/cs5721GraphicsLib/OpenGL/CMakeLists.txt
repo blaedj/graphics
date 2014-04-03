@@ -9,6 +9,7 @@ link_directories(${CMAKE_BINARY_DIR}/libcs5721/cs5721GraphicsLib/src)
 add_executable (openGLRender
   OpenGLRender.h OpenGLRender.cpp
   simpleSFMLGL.cpp
+  cube.cpp cube.h
 )
 target_link_libraries (openGLRender sive-rtutil)
 target_link_libraries (openGLRender ${Boost_THREAD_LIBRARIES})
@@ -38,7 +39,7 @@ target_link_libraries (openGLRender z)
 # target_link_libraries (vboRender z)
 
 add_executable (fboExample
-	       fboExample.cpp 
+	       fboExample.cpp
 	       framebufferObject.cpp framebufferObject.h
 	       GLSL.cpp GLSL.h
 )
