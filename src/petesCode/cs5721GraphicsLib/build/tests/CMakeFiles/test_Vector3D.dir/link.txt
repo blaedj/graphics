@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/test_Vector3D.dir/test_Vector3D.cpp.o  -o test_Vector3D -rdynamic ../src/libsive-rtutil.a 
