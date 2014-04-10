@@ -56,6 +56,7 @@ bool checkOrthonormal(Basis basis) {
   BOOST_CHECK(u.dot(v) == 0);
   BOOST_CHECK(u.dot(w) == 0);
   BOOST_CHECK(v.dot(w) == 0);
+  return true;
 }
 
 

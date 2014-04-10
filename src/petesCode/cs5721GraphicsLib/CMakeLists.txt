@@ -1,11 +1,9 @@
 cmake_minimum_required (VERSION 2.8)
 project (CS5721Graphics)
 
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
-
 # --------------------------------------------------------------------
 # PNG and ZLIB
-# 
+#
 # This macro will attempt to locate the PNG include directories, link
 # directories and libraries. The INCLUDE_DIRECTORIES macro adds the
 # resulting include directories to the search path.
@@ -17,16 +15,20 @@ else (PNG_FOUND)
   MESSAGE(STATUS "Could not find the PNG Libraries!")
 endif (PNG_FOUND)
 
+#SET (SFMLDIR /Users/blaed/Downloads/SFML-1.6-sdk-macosx-ub32+64/)
+
 # --------------------------------------------------------------------
 # SFML and OpenGL
-# 
+#
 # --------------------------------------------------------------------
 FIND_PACKAGE(SFML 1 COMPONENTS system window graphics audio REQUIRED)
-# FIND_LIBRARY(SFML-SYSTEM_LIBRARY NAMES sfml-system )
-# FIND_LIBRARY(SFML-GRAPHICS_LIBRARY NAMES sfml-graphics )
-# FIND_LIBRARY(SFML-WINDOW_LIBRARY NAMES sfml-window )
+FIND_LIBRARY(SFML-SYSTEM_LIBRARY NAMES sfml-system )
+FIND_LIBRARY(SFML-GRAPHICS_LIBRARY NAMES sfml-graphics )
+FIND_LIBRARY(SFML-WINDOW_LIBRARY NAMES sfml-window )
 
 FIND_PACKAGE(OpenGL REQUIRED)
+
+
 
 # ----------------------------------------------------------
 # Boost
@@ -38,7 +40,7 @@ FIND_PACKAGE(OpenGL REQUIRED)
 SET (Boost_MULTITHREADED TRUE)
 
 # If you want to get more info on what the Find Boost macro is
-# doing...  
+# doing...
 # SET(Boost_DEBUG 1)
 
 # Necessary to get Win32 version to work, plus, not a bad idea to link
@@ -69,7 +71,7 @@ add_subdirectory(OpenGL)
 # that lets unit tests be run. After re-building yourproject with
 # ENABLE_TESTING called, a make target, called test will be
 # enabled. You can then type
-# 
+#
 #  make test
 #
 # to perform the unit tests. See the CMakeLists.txt file in the utests

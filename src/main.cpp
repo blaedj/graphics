@@ -18,6 +18,7 @@
 #include "basis.h"
 #include "raytracer.h"
 #include "rasterizer.h"
+#include "matrix4x4.h"
 
 using namespace sivelab;
 using namespace std;
@@ -26,6 +27,8 @@ using namespace rasterizer;
 
 
 bool useRaytracing(GraphicsArgs args);
+void matrixTests();
+
 
 void testXMLparsing(string fileName) {
   XMLSceneParser xmlParser;
@@ -55,6 +58,7 @@ int main(int argc, char *argv[])
   args.process(argc, argv);
   string filename = args.inputFileName;
 
+#if 0
   //runTests(args);
   clock_t init, final;
   init=clock();
@@ -67,28 +71,48 @@ int main(int argc, char *argv[])
   xmlParser.registerCallback("light", scene);
   xmlParser.registerCallback("shader", scene);
   xmlParser.registerCallback("shape", scene);
-  //  xmlParser.registerCallback("instance", scene);
   xmlParser.parseFile(filename);
   assert(scene->lightList.size() > 0);
   assert(scene->shapeList.size() > 0);
   assert(scene->cameraList.size() > 0);
 
   if(useRaytracing(args)){
-    Raytracer rt(scene, args);
-    rt.render();
-    ///    scene->render(args.outputFileName, args.width, args.height);
-  } else { // use rasterizer
-    Rasterizer raster(scene, args);
-    raster.render();
-  }
+  Raytracer rt(scene, args);
+  rt.render();
+  ///    scene->render(args.outputFileName, args.width, args.height);
+} else { // use rasterizer
+  Rasterizer raster(scene, args);
+  raster.render();
+}
 
   final=clock()-init;
   cout << "render time was: " << (double)final / ((double)CLOCKS_PER_SEC) << " seconds.\n";
-
+#endif
+  matrixTests();
   return 0;
 }
 
+void matrixTests() {
+  Matrix4x4 matr(1.0, 2.0, 2.0, 4.0,
+		 2.0, 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0 ,1.0,
+		 1.0, 1.0, 1.0, 1.0);
+  matr.print();
+  Matrix4x4 matr2(1.0, 2.0, 2.0, 4.0,
+  		  5.0, 5.0, 4.0, 3.0,
+  		  2.0, 2.0, 6.0, 5.0,
+  		  5.0, 5.0, 4.0, 3.0);
 
-bool useRaytracing(GraphicsArgs args){
+  Matrix4x4 result;
+  result = matr * matr2;
+  cout << "multiplying two matrices:\n";
+  result.print();
+
+  matr.setIdentity();
+  cout << "Setting identity matrix\n";
+  matr.print();
+}
+
+ bool useRaytracing(GraphicsArgs args){
   return true;
 }

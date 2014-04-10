@@ -32,6 +32,7 @@ ENDIF()
 
 add_library(rasterizer
   rasterizer.cpp rasterizer.h
+  Matrix4x4.h Matrix4x4.cpp
 )
 
 target_link_libraries(rasterizer ${Boost_PROGRAM_OPTIONS_LIBRARIES})

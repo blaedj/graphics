@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.8)
 project(graphicsBCJ)
 
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
+
 # --------------------------------------------------------------------
 # PNG and ZLIB
 #
@@ -15,6 +17,14 @@ else (PNG_FOUND)
   MESSAGE(STATUS "Could not find the PNG Libraries!")
 endif (PNG_FOUND)
 
+# --------------------------------------------------------------------
+# SFML and OpenGL
+#
+# --------------------------------------------------------------------
+FIND_PACKAGE(SFML 1 COMPONENTS system window graphics audio REQUIRED)
+# FIND_LIBRARY(SFML-SYSTEM_LIBRARY NAMES sfml-system )
+# FIND_LIBRARY(SFML-GRAPHICS_LIBRARY NAMES sfml-graphics )
+# FIND_LIBRARY(SFML-WINDOW_LIBRARY NAMES sfml-window )
 
 
 SET (Boost_MULTITHREADED TRUE)
@@ -32,20 +42,23 @@ IF(${Boost_FOUND})
   INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 ENDIF()
 
+
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/petesCode/cs5721GraphicsLib/src)
-LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
+
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/raytracer)
-LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/raytracer)
+
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/rasterizer)
-LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/rasterizer)
+
 
 ADD_SUBDIRECTORY(raytracer)
 ADD_SUBDIRECTORY(rasterizer)
 ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib/)
 
-
+LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
+LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/raytracer)
+LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/rasterizer)
 
 #
 # Unit Tests - by enabling testing with cmake, we can create a target

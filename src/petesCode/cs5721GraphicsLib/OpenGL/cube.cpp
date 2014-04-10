@@ -3,7 +3,7 @@
 using namespace sivelab;
 
 
-Cube::render(){
+void Cube::render(){
   // the following go before the cube is rendered.
   // glClear();
   // glMatrixMode(GL_MODELVIEW);
