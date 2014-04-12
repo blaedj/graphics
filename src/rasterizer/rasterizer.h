@@ -4,8 +4,11 @@
 
 #include "Scene.h"
 #include "handleGraphicsArgs.h"
+#include "shape.h"
+#include "triangle.h"
 
 using namespace sivelab;
+using namespace raytracer;
 using namespace std;
 
 namespace rasterizer {

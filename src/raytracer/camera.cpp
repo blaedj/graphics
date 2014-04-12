@@ -5,7 +5,7 @@ using namespace std;
 namespace raytracer {
 
   Camera::Camera(void){
-    location = Vector3D(1.0, 1.0, 1.0);
+    location = Vector3D(0.0, 0.0, 0.0);
     viewDirection = Vector3D(0.0,0.0,-1.0);
     this->orthoBasis = Basis();
   }
@@ -25,6 +25,7 @@ namespace raytracer {
     orthoBasis = Basis(U, V, W);
   }
 
+  /*two-vector basis*/
   Camera::Camera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth){
     this->location = location;
     this->viewDirection = direction;
@@ -32,10 +33,10 @@ namespace raytracer {
     this->focalLength = focalLength;
     this->imagePlaneWidth = imagePlaneWidth;
     // construct a basis from 2 vectors
-    Vector3D W(-1.0 * direction);
+    Vector3D W((-1 * direction));
     W.normalize();
 
-    Vector3D upDir(0.0, 1.0, 0.0);
+    Vector3D upDir(0.0, -1.0, 0.0);
 
     if(areColinear(W, upDir)) {
       cout << "were colinear, corected\n";

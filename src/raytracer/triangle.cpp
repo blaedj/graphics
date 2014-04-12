@@ -14,6 +14,7 @@ namespace raytracer {
     this->p3 = vert3;
     this->shader = shadr;
     this->normal = (p2 - p1).cross(p3 - p1);
+    this->name = "triangle:" ;
     normal.normalize();
   }
 

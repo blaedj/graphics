@@ -8,8 +8,10 @@ namespace raytracer {
 
   PerspectiveCamera::PerspectiveCamera() {}
 
+  // default view dir
   PerspectiveCamera::PerspectiveCamera(Vector3D location,std::string name, float focalLength, float imagePlaneWidth) : Camera(location, name, focalLength, imagePlaneWidth){ }
 
+  // supplied view dir
   PerspectiveCamera::PerspectiveCamera(Vector3D location, Vector3D direction, std::string name, float focalLength, float imagePlaneWidth) :
     Camera(location, direction, name, focalLength, imagePlaneWidth){ }
 
@@ -27,7 +29,7 @@ namespace raytracer {
       * (j + 0.5) / imageWidth;
 
     Vector3D rayDirection = -(this->focalLength)*W + u*U +v*V;
-
+    rayDirection.normalize();
     r.origin = this->location;
     r.direction = rayDirection;
     return r;

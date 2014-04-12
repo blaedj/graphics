@@ -104,12 +104,9 @@ namespace raytracer {
     /** TOBE REPLACED BY BVH**/
     nearestHit = getNearestHit(tmin, ray, tmax);
 
-    if(!nearestHit.hit){
+    if(!nearestHit.hit || !nearestHit.hitShape ){
       return backgroundColor;
     }else {
-      Shape *nearestShape;
-      nearestShape = nearestHit.hitShape;
-
       Light *l;
       Shader *sh = nearestHit.shader;
       Vector3D pointHit = ray.origin + (ray.direction * nearestHit.distance);
@@ -123,16 +120,23 @@ namespace raytracer {
 	Ray shadowRay(pointHit, lightDir );
 
 	if(!anyHit(marginError, shadowRay, tmax )) {
+	  // make sure nearestHit has reference to the shape it hit.
 	  assert(nearestHit.hitShape);
+	  Shape *nearShp = nearestHit.hitShape;
+
 	  Vector3D intensity, surfaceNormal;
 	  intensity = l->intensity;
-	  //	  cout << "nearShp name: \n";
-	  Shape *nearShp = nearestHit.hitShape;
-	  // cout << nearShp->name << endl;
-	  // cout << "gonna set normal\n";
-	  surfaceNormal = nearestShape->normalAtPoint(pointHit);
-	  //	  cout << "surfaceNormal :" << surfaceNormal << endl;
-	  tempColor += sh->calculateColor(intensity, lightDir, surfaceNormal, viewDir);
+
+	  try {
+	    cout << "nearShp->name :" << nearShp->name << endl;
+	  } catch(...){
+	    cout << "unable to access the name of the nearShp" << endl;
+	  }
+
+	  surfaceNormal = nearShp->normalAtPoint(pointHit);
+
+	  tempColor += sh->calculateColor(intensity, lightDir,
+					  surfaceNormal, viewDir);
 	}
       }
     }

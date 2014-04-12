@@ -10,7 +10,7 @@ namespace raytracer{
   Basis::Basis() {
     U = Vector3D(1.0,0.0,0.0);
     V = Vector3D(0.0,1.0,0.0);
-    W = Vector3D(0.0,0.0,1.0);
+    W = Vector3D(0.0,0.0,-1.0);
     // cout << "u,v,w for basis: \n";
     // cout << U << endl;
     // cout << V << endl;

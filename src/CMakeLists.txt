@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.8)
 project(graphicsBCJ)
 
+SET(CMAKE_BUILD_TYPE DEBUG)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
 
 # --------------------------------------------------------------------

@@ -17,6 +17,7 @@
 #include "lambertian_shader.h"
 #include "sphere.h"
 #include "triangle.h"
+#include "box.h"
 #include "blinn_phong.h"
 
 using namespace std;
@@ -55,7 +56,6 @@ namespace raytracer {
     Camera* parseCameraData( ptree::value_type const &v);
 
     void parseShaderData(ptree::value_type const &v);
-
 
   private:
 

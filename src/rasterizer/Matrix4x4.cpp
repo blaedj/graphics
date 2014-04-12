@@ -17,7 +17,6 @@ namespace rasterizer {
   Matrix4x4::Matrix4x4() {
     set(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-
   }
 
 
@@ -110,5 +109,63 @@ namespace rasterizer {
     return result;
 
   }
+
+  const Vector3D Matrix4x4::multVector(const Vector3D &v, const double w) const {
+    return Vector3D(v[0]*w, v[1]*w, v[2]*w);
+  }
+
+  double Matrix4x4::determinant() const {
+    Matrix3x3 _minus00(d[1][1], d[1][2], d[1][3],
+		       d[2][1], d[2][2], d[2][3],
+		       d[3][1], d[3][2], d[3][3]);
+
+    Matrix3x3 _minus01(d[1][0], d[1][2], d[1][3],
+		       d[2][0], d[2][2], d[2][3],
+		       d[3][0], d[3][2], d[3][3]);
+
+    Matrix3x3 _minus02(d[1][0], d[1][1], d[1][3],
+		       d[2][0], d[2][1], d[2][3],
+		       d[3][0], d[3][1], d[3][3]);
+
+    Matrix3x3 _minus03(d[1][0], d[1][1], d[1][2],
+		       d[2][0], d[2][1], d[2][2],
+		       d[3][0], d[3][1], d[3][2]);
+
+    double det;
+    det = d[0][0] * _minus00.determinant() - d[0][1] * _minus01.determinant() +
+      d[0][2] * _minus02.determinant() - d[0][3] * _minus03.determinant();
+    return det;
+  }
+
+  /*
+   * The cofactor of the matrix from the 1-indexed location d[i][j]
+   */
+  double Matrix4x4::cofactor(int i, int j) const{
+    // algorithm from http://en.wikipedia.org/wiki/Minor_(linear_algebra)
+    // int iactual = max(0, i-1);
+    // int jactual = max(0, j-1);
+
+    // Matrix3x3 minor;
+    // double minor[3][3];
+
+
+    // for(int idx = 0; idx < 4; idx++){
+    //   if(idx != iactual){ // skip the 'i' row
+    // 	for(int jdx = 0; jdx < 4; jdx ++){
+    // 	  if(jdx != jactual){//skip the 'j' column
+    // 	    minor[idx][jdx] =
+    // 	  }
+    // 	}
+    //   }
+    // }
+
+    // // int iactual = i;
+    // // int jactual = j;
+
+    // double cofij = pow(-1, iactual + jactual) * d[iactual][jactual];
+    // return cofij;
+    return 0;
+  }
+
 
 }

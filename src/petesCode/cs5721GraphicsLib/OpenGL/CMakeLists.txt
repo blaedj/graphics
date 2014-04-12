@@ -11,20 +11,20 @@ link_libraries (${OPENGL_LIBRARY})
 include_directories(${CMAKE_SOURCE_DIR}/petesCode/cs5721GraphicsLib/src)
 link_directories(${CMAKE_BINARY_DIR}/petesCode/cs5721GraphicsLib/src)
 
-# add_executable (openGLRender
-#   OpenGLRender.h OpenGLRender.cpp
-#   simpleSFMLGL.cpp
-#   cube.cpp cube.h
-# )
-# target_link_libraries (openGLRender sive-rtutil)
-# target_link_libraries (openGLRender ${Boost_THREAD_LIBRARIES})
-# target_link_libraries (openGLRender ${Boost_PROGRAM_OPTIONS_LIBRARIES})
-# target_link_libraries (openGLRender ${Boost_FILESYSTEM_LIBRARIES})
-# target_link_libraries (openGLRender ${Boost_SYSTEM_LIBRARIES})
-# target_link_libraries (openGLRender ${SFML_LIBRARIES})
-# target_link_libraries (openGLRender GLEW)
-# target_link_libraries (openGLRender png)
-# target_link_libraries (openGLRender z)
+add_executable (openGLRender
+  OpenGLRender.h OpenGLRender.cpp
+  simpleSFMLGL.cpp
+  cube.cpp cube.h
+)
+target_link_libraries (openGLRender sive-rtutil)
+target_link_libraries (openGLRender ${Boost_THREAD_LIBRARIES})
+target_link_libraries (openGLRender ${Boost_PROGRAM_OPTIONS_LIBRARIES})
+target_link_libraries (openGLRender ${Boost_FILESYSTEM_LIBRARIES})
+target_link_libraries (openGLRender ${Boost_SYSTEM_LIBRARIES})
+target_link_libraries (openGLRender ${SFML_LIBRARIES})
+target_link_libraries (openGLRender GLEW)
+#target_link_libraries (openGLRender png)
+target_link_libraries (openGLRender z)
 
 
 # add_executable (vboRender

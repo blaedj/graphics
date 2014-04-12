@@ -15,13 +15,11 @@ else (PNG_FOUND)
   MESSAGE(STATUS "Could not find the PNG Libraries!")
 endif (PNG_FOUND)
 
-#SET (SFMLDIR /Users/blaed/Downloads/SFML-1.6-sdk-macosx-ub32+64/)
-
 # --------------------------------------------------------------------
 # SFML and OpenGL
 #
 # --------------------------------------------------------------------
-FIND_PACKAGE(SFML 1 COMPONENTS system window graphics audio REQUIRED)
+FIND_PACKAGE(SFML 2 COMPONENTS system window graphics audio REQUIRED)
 FIND_LIBRARY(SFML-SYSTEM_LIBRARY NAMES sfml-system )
 FIND_LIBRARY(SFML-GRAPHICS_LIBRARY NAMES sfml-graphics )
 FIND_LIBRARY(SFML-WINDOW_LIBRARY NAMES sfml-window )

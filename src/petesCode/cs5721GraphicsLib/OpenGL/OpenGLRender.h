@@ -17,6 +17,8 @@
 
 #include "cube.h"
 
+using namespace std;
+
 class OpenGLRender
 {
 public:

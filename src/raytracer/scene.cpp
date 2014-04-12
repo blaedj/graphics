@@ -98,7 +98,7 @@ namespace raytracer {
       buffer.clear();
       radius = v.second.get<float>("radius");
       s = new Sphere(center, radius, shadr);
-      //}
+      s->name = name;
       shapeList.push_back(s);
       //return s;
     } else if(type == "triangle") {
@@ -115,6 +115,20 @@ namespace raytracer {
       buffer >> v2;
       buffer.clear();
       s = new Triangle(v0, v1, v2, shadr);
+      s->name = name;
+      shapeList.push_back(s);
+    } else if( type == "box"){
+      Vector3D near, far;
+      buffer.str(v.second.get<string>("minPt"));
+      buffer >> near;
+      buffer.clear();
+
+      buffer.str(v.second.get<string>("maxPt"));
+      buffer >> far;
+      buffer.clear();
+
+      s = new Box(near, far, shadr);
+      s->name = name;
       shapeList.push_back(s);
     } else {
       s = new Sphere(Vector3D(0,0,0), 0.0);
@@ -224,8 +238,6 @@ namespace raytracer {
       allShaders.insert(std::pair<string, Shader*>(name, shader));
     }
   }
-
-
 
 
 } /** end  raytracer*/
