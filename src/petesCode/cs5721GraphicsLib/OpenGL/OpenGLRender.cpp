@@ -1,6 +1,8 @@
 #include "OpenGLRender.h"
 
+
 void addTriangle(double vertex[9], double colors[9], float * host_VertexBuffer,  int tIdx);
+
 OpenGLRender::OpenGLRender(const int winWidth, const int winHeight)
   : m_winWidth( winWidth ),
     m_winHeight( winHeight )
@@ -37,10 +39,12 @@ OpenGLRender::OpenGLRender(const int winWidth, const int winHeight)
   //
   glViewport(0, 0, m_winWidth, m_winHeight);
 
+  gluLookAt( 0, 0, 5, 0, 0, 0, 0, 1, 0 );
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  float verticalFieldOfView = 60.0; // in degrees
+  float verticalFieldOfView = 70.0; // in degrees
   float aspectRatio = m_winWidth/(float)m_winHeight;
   float nearPlaneDist = 1.0;
   float farPlaneDist = 500.0;
@@ -55,11 +59,15 @@ OpenGLRender::OpenGLRender(const int winWidth, const int winHeight)
 
   // In this example, we're going to render just a few triangles to
   // show how its done.
+  //  glRotatef( 40.0, 3.0, 3.0, 3.0 );
+  //  glTranslatef( 1.0, -1.0, 2.0 );
+  ///glScalef( float x, float, y, float z );
+
 
   glGenBuffers(2, &m_triangleVBO);///////
   glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO);
 
-  int num_of_shapes = 2;
+  int num_of_shapes = 12;
   m_numVertices = 3 * num_of_shapes;
   int numFloatsPerVertex = 3;
   int numColors = 3;  // for non-material shading
@@ -71,7 +79,29 @@ OpenGLRender::OpenGLRender(const int winWidth, const int winHeight)
   float* host_VertexBuffer = new float[ m_numVertices * numFloatsPerVertex * numColors * numFloatsPerColor * 3 * num_of_shapes];
 
   int tIdx = 0;
+
+  Vector3D nearPoint(1.0, 1.0, 1.0);
+  Vector3D farPoint(2.0, 2.0, 2.0);
+  Shader *sh;
+  Box testCube(nearPoint, farPoint, sh);
+  double vertsBuffer[36];
+  double cubeColors[] = {1.0, 0.0, 0.0,
+			 0.0, 1.0, 0.0,
+			 0.0, 0.0, 1.0};
+  Triangle tri;
+  vector<Triangle> cubeParts = testCube.getTriangles();
+
+  /*probably terribly inefficient*/
+  for(int i = 0; i < 12; i++){
+    tri = cubeParts[i];
+    addTriangle(tri.vertices, cubeColors, host_VertexBuffer, tIdx);
+    tIdx += 24;
+  }
+
+
+  // ------Manual Triangles-------------------
   //                     //x  //y  //z
+  /*
   double vertices1[] = { 0.0,  2.5, -8.0,
 			-2.5, -2.5, -5.0,
 			2.5, -2.5, -5.0};
@@ -89,64 +119,7 @@ OpenGLRender::OpenGLRender(const int winWidth, const int winHeight)
 
   addTriangle(verts2, colors2, host_VertexBuffer, tIdx);
   tIdx += 24;
-
-  for(int i = 0; i < 24; i++){
-    cout << *(host_VertexBuffer+i) << endl;
-  }
-
-
-  //------Second Triangle------------------------
-  // ////////////////////////
-  // V0
-  // The vertex data
-  // host_VertexBuffer[ tIdx++ ] = -5.0f;
-  // host_VertexBuffer[ tIdx++ ] = 2.5f;
-  // host_VertexBuffer[ tIdx++ ] = -10.0f;
-
-  // // then it's color
-  // host_VertexBuffer[ tIdx++ ] = 1.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-
-  // // then, the texture coordinate if it has one
-  // host_VertexBuffer[ tIdx++ ] = 0.0;
-  // host_VertexBuffer[ tIdx++ ] = 0.0;
-
-  // // ////////////////////////
-  // // V1
-  // // the next vertex data
-  // host_VertexBuffer[ tIdx++ ] = -2.5f;
-  // host_VertexBuffer[ tIdx++ ] = -2.5f;
-  // host_VertexBuffer[ tIdx++ ] = -5.0f;
-
-  // // it's color
-  // host_VertexBuffer[ tIdx++ ] = 1.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-
-  // // then, the texture coordinate
-  // host_VertexBuffer[ tIdx++ ] = 1.0;
-  // host_VertexBuffer[ tIdx++ ] = 0.0;
-
-  // // ////////////////////////
-  // // V2
-  // // the 3rd vertex
-  // host_VertexBuffer[ tIdx++ ] = 2.5f;
-  // host_VertexBuffer[ tIdx++ ] = -2.5f;
-  // host_VertexBuffer[ tIdx++ ] = -5.0f;
-
-  // // it's color
-  // host_VertexBuffer[ tIdx++ ] = 1.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-  // host_VertexBuffer[ tIdx++ ] = 0.0f;
-
-  // // then, the texture coordinate
-  // host_VertexBuffer[ tIdx++ ] = 0.5;
-  // host_VertexBuffer[ tIdx++ ] = 0.5;
-
-  //-----------------------------
-
-
+  */
 
   int numBytes = m_numVertices * numFloatsPerVertex * numColors * numFloatsPerColor * 3 * sizeof(float) * num_of_shapes;
   glBufferData(GL_ARRAY_BUFFER, numBytes, host_VertexBuffer, GL_STATIC_DRAW);

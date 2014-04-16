@@ -28,7 +28,6 @@ namespace raytracer {
     string name;
     Shader* getShader() { return this->shader;}
 
-
   protected:
     Shader* shader;
 

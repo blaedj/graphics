@@ -12,10 +12,28 @@ namespace raytracer {
     this->p1 = vert1;
     this->p2 = vert2;
     this->p3 = vert3;
-    this->shader = shadr;
+    setShader(shadr);
     this->normal = (p2 - p1).cross(p3 - p1);
     this->name = "triangle:" ;
     normal.normalize();
+    vertices[0] = vert1[0];
+    vertices[1] = vert1[1];
+    vertices[2] = vert1[2];
+    vertices[3] = vert2[0];
+    vertices[4] = vert2[1];
+    vertices[5] = vert2[2];
+    vertices[6] = vert3[0];
+    vertices[7] = vert3[1];
+    vertices[8] = vert3[2];
+  }
+
+  void Triangle::setShader(Shader *sh){
+    if(!sh){
+      Vector3D color(.2, .2, .2);
+      this->shader = new SolidShader(color);
+    } else {
+      this->shader = sh;
+    }
   }
 
   HitInfo Triangle::closestHit(const Ray &ray, float tmin, float &tmax) {

@@ -30,7 +30,6 @@ namespace raytracer {
     // the question to answer is: Does plugging t into the equation return 0?
     // if yes, then the ray intersects the sphere surface at magnitude 't'.
     // t: a(t * t) + B*t + c = 0?
-    float eps = .001;
     struct HitInfo hitStruct;
     hitStruct.hit = false;
     float u, f, t0, t1; // intersection distance 't'

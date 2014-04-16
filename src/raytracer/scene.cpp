@@ -117,6 +117,8 @@ namespace raytracer {
       s = new Triangle(v0, v1, v2, shadr);
       s->name = name;
       shapeList.push_back(s);
+
+      m_allTriangles.push_back(Triangle(v0, v1, v2, shadr));
     } else if( type == "box"){
       Vector3D near, far;
       buffer.str(v.second.get<string>("minPt"));
@@ -130,6 +132,12 @@ namespace raytracer {
       s = new Box(near, far, shadr);
       s->name = name;
       shapeList.push_back(s);
+      //HACK follows - should figure out how to turn any shape into triangles
+      Box bx(near, far, shadr);
+      for(int i = 0; i < bx.getTriangles().size(); i++){
+      m_allTriangles.push_back(bx.getTriangles()[i]);
+      }
+
     } else {
       s = new Sphere(Vector3D(0,0,0), 0.0);
       shapeList.push_back(s);
@@ -238,6 +246,5 @@ namespace raytracer {
       allShaders.insert(std::pair<string, Shader*>(name, shader));
     }
   }
-
 
 } /** end  raytracer*/

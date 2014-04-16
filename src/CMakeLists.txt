@@ -54,15 +54,18 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/raytracer)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/rasterizer)
 
+#INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/opGL)
 
 ADD_SUBDIRECTORY(raytracer)
 ADD_SUBDIRECTORY(rasterizer)
+#ADD_SUBDIRECTORY(opGL)
 ADD_SUBDIRECTORY(petesCode/cs5721GraphicsLib/)
+
 
 LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/petesCode/cs5721GraphicsLib/src)
 LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/raytracer)
 LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/rasterizer)
-
+#LINK_DIRECTORIES(${CMAKE_BUILD_DIR}/opGL)
 #
 # Unit Tests - by enabling testing with cmake, we can create a target
 # that lets any of your unit tests be run when issuing a make command. After re-building your project with

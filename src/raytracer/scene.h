@@ -57,7 +57,12 @@ namespace raytracer {
 
     void parseShaderData(ptree::value_type const &v);
 
+    std::vector<Triangle> getTriangles(){
+      return m_allTriangles;
+    };
+
   private:
+    std::vector<Triangle> m_allTriangles;
 
   };
 }

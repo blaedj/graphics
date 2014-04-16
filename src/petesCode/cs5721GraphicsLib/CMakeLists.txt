@@ -26,7 +26,7 @@ FIND_LIBRARY(SFML-WINDOW_LIBRARY NAMES sfml-window )
 
 FIND_PACKAGE(OpenGL REQUIRED)
 
-
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/raytracer)
 
 # ----------------------------------------------------------
 # Boost

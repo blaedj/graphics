@@ -9,6 +9,8 @@
 #include "triangle.h"
 #include "ray.h"
 
+#include "solid_shader.h"
+
 using namespace sivelab;
 using namespace std;
 
@@ -27,10 +29,14 @@ namespace raytracer {
     virtual Vector3D applyShader();
     virtual Vector3D normalAtPoint(Vector3D point);
 
+    std::vector<Triangle> getTriangles() {
+      return m_triangles;
+    }
   private:
 
     void addTriangle(Vector3D a, Vector3D b, Vector3D c);
     Shader *m_sh;
+    void setShader(Shader *sh);
   };
 
 

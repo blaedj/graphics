@@ -5,6 +5,7 @@ namespace raytracer {
 
   Box::Box(Vector3D near, Vector3D far, Shader *sh) {
     this->m_sh = sh;
+    setShader(sh);
     double x, y, z, w, l, h;
     // xyz coords of near point.
     x = near[0];
@@ -64,6 +65,14 @@ namespace raytracer {
     addTriangle(blf, brf, brb);
   }
 
+  void Box::setShader(raytracer::Shader *sh){
+    if(!sh){
+      Vector3D color(.2, .2, .2);
+      this->m_sh = new SolidShader(color);
+    } else {
+      this->m_sh = sh;
+    }
+  }
 
   HitInfo Box::closestHit(const Ray &ray, float tmin, float &tmax) {
     float smallestDist = FLT_MAX;

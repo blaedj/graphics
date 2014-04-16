@@ -15,9 +15,11 @@
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
 
-#include "cube.h"
+#include "../../../raytracer/box.h"
+#include "../../../raytracer/shader.h"
 
 using namespace std;
+using namespace raytracer;
 
 class OpenGLRender
 {

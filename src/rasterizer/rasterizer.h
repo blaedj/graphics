@@ -23,7 +23,9 @@ namespace rasterizer {
     virtual ~Rasterizer(){}
 
     void render();
-
+  private:
+    // should make this a vector of triangle pointers...
+    std::vector<Triangle> m_triangles;//(10, Triangle());
 
   };
 

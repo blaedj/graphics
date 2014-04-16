@@ -3,6 +3,7 @@
 
 #include "shape.h"
 #include "shader.h"
+#include "solid_shader.h"
 
 using namespace sivelab;
 
@@ -19,7 +20,16 @@ namespace raytracer {
     virtual Vector3D applyShader();
     virtual Vector3D normalAtPoint(Vector3D point);
 
+    const double operator[](const int i) const
+    {
+      // do a sanity check to make sure indices are OK!
+      assert(i >= 0 && i < 9);
+      return vertices[i];
+    }
+
+    double vertices[9];
   private:
+    void setShader(Shader* sh);
     Vector3D p1;
     Vector3D p2;
     Vector3D p3;

@@ -31,7 +31,7 @@ namespace raytracer {
 
   private:
     Vector3D color;
-
+    void setShader(Shader *sh);
 
   };
 
