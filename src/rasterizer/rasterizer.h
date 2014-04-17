@@ -6,12 +6,14 @@
 #include "handleGraphicsArgs.h"
 #include "shape.h"
 #include "triangle.h"
+#include "camera.h"
 
 using namespace sivelab;
 using namespace raytracer;
 using namespace std;
 
 namespace rasterizer {
+  const int VERTICES_PER_TRIANGLE = 3;
 
   class Rasterizer
   {
@@ -26,6 +28,10 @@ namespace rasterizer {
   private:
     // should make this a vector of triangle pointers...
     std::vector<Triangle> m_triangles;//(10, Triangle());
+    Camera *m_camera;
+    int m_width;
+    int m_height;
+    string m_outputFileName;
 
   };
 

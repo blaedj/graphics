@@ -168,4 +168,38 @@ namespace rasterizer {
   }
 
 
+
+  const Matrix4x4 Matrix4x4::createCameraMatrix(Vector3D U, Vector3D V,
+						Vector3D W, Vector3D camOrigin) {
+    Matrix4x4 m1(U[0], U[1], U[2], 0.0,
+		 V[0], V[1], V[2], 0.0,
+		 W[0], W[1], W[2], 0.0,
+		 0.0,   0.0,  0.0, 1.0 );
+    Matrix4x4 m2(1.0, 0.0, 0.0, -camOrigin[0],
+		 0.0, 1.0, 0.0, -camOrigin[1],
+		 0.0, 0.0, 1.0, -camOrigin[2],
+		 0.0, 0.0, 0.0,  1.0 );
+    return m1 * m2;
+  }
+
+  const Matrix4x4 Matrix4x4::createOrthoMatrix(double near_bound, double far_bound,
+					       double left_bound, double right_bound,
+					       double top_bound, double bottom_bound){
+
+    Matrix4x4 ortho(2.0/right_bound - left_bound, 0, 0, -(right_bound + left_bound)/right_bound - left_bound,
+		    0, 2.0 / top_bound - bottom_bound, 0, -(top_bound + bottom_bound)/top_bound - bottom_bound,
+		    0, 0, 2.0/(near_bound - far_bound), -(near_bound + far_bound)/near_bound - far_bound,
+		    0, 0,                 0           ,                    1                             );
+    return ortho;
+  }
+
+  const Matrix4x4 Matrix4x4::createViewPortMatrix(int height, int width){
+    Matrix4x4 vpMatrix(width/2.0, 0, 0, (height - 1)/2.0,
+		       0, height/2.0, 0.0, (height -1)/2.0,
+		       0.0, 0.0, 1.0, 0.0,
+		       0.0, 0.0, 0.0, 1.0 );
+    return vpMatrix;
+  }
+
+
 }

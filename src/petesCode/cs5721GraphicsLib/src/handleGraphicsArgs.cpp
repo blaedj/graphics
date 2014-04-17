@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libsivelab.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,11 +25,11 @@
 using namespace sivelab;
 
 GraphicsArgs::GraphicsArgs()
-  : verbose(false), width(100), height(100), 
+  : verbose(false), width(100), height(100),
     aspectRatio(1.0), useShadow(true), bgColor(0.0, 0.0, 0.0),
     useDepthOfField(false),
     depthOfFieldDistance(0),
-    numCpus(1), rpp(1), 
+    numCpus(1), rpp(1),
     recursionDepth(4),
     splitMethod("objectMedian"),
     inputFileName(""), outputFileName("")
@@ -46,6 +46,7 @@ GraphicsArgs::GraphicsArgs()
   reg("rpp", "rays per pixel (default is 1)", ArgumentParsing::INT, 'r');
   reg("recursionDepth", "recursion depth (default is 4)", ArgumentParsing::INT, 'k');
   reg("split", "split method for bvh construction (default is objectMedian)", ArgumentParsing::STRING, 's');
+  reg("engine", "method of creating image, raster or raytrace (default is raytrace)", ArgumentParsing::STRING, 'e');
 }
 
 void GraphicsArgs::process(int argc, char *argv[])
@@ -60,16 +61,16 @@ void GraphicsArgs::process(int argc, char *argv[])
 
   verbose = isSet("verbose");
   if (verbose) std::cout << "Verbose Output: ON" << std::endl;
-  
+
   isSet("width", width);
   if (verbose) std::cout << "Setting width to " << width << std::endl;
-  
+
   isSet("height", height);
   if (verbose) std::cout << "Setting height to " << height << std::endl;
 
   // recalculate aspect ratio in lieu of aspectRatio being set
   aspectRatio = width / (float)height;  // as in W to H as in 16:9
-  
+
   isSet("aspect", aspectRatio);
   if (verbose) std::cout << "Setting aspect ratio to " << aspectRatio << std::endl;
 
@@ -87,7 +88,7 @@ void GraphicsArgs::process(int argc, char *argv[])
 
   isSet("recursionDepth", recursionDepth);
   if (verbose) std::cout << "Setting recursionDepth to " << recursionDepth << std::endl;
-  
+
   isSet("split", splitMethod);
   if (verbose) std::cout << "Setting split method to " << splitMethod << std::endl;
 
@@ -96,5 +97,9 @@ void GraphicsArgs::process(int argc, char *argv[])
 
   isSet("outputfile", outputFileName);
   if (verbose) std::cout << "Setting outputFileName to " << outputFileName << std::endl;
-}
 
+  isSet("engine", engine);
+  if (verbose) std::cout << "Setting engine type to " << engine << std::endl;
+
+
+}

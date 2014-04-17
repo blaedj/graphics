@@ -159,5 +159,9 @@ void testCofactor(){
 }
 
 bool useRaytracing(GraphicsArgs args){
-  return true;
+  if(args.engine == "raytrace"){
+    cout << "going to raytrace" << endl;
+    return true;
+  }
+  else return false;
 }

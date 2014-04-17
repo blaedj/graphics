@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libsivelab.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,7 +47,7 @@ namespace sivelab {
     float aspectRatio;
     bool useShadow;
     Vector3D bgColor;
-    
+
     bool useDepthOfField;
     float depthOfFieldDistance;
 
@@ -56,11 +56,13 @@ namespace sivelab {
     int rpp;
 
     int recursionDepth;
-    
+
     std::string splitMethod;
-    
+
     std::string inputFileName;
     std::string outputFileName;
+    std::string engine;
+
   };
 
 }
