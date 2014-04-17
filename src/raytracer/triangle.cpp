@@ -9,11 +9,11 @@ using namespace sivelab;
 namespace raytracer {
 
   Triangle::Triangle(Vector3D vert1, Vector3D vert2, Vector3D vert3, Shader *shadr) {
-    this->p1 = vert1;
-    this->p2 = vert2;
-    this->p3 = vert3;
+    this->p1_ = vert1;
+    this->p2_ = vert2;
+    this->p3_ = vert3;
     setShader(shadr);
-    this->normal = (p2 - p1).cross(p3 - p1);
+    this->normal = (p2_ - p1_).cross(p3_ - p1_);
     this->name = "triangle:" ;
     normal.normalize();
     vertices[0] = vert1[0];
@@ -44,13 +44,13 @@ namespace raytracer {
     float a, b, c, d, e, f, g, h, i, j, k, l, M;
     float beta, gamma, t;
 
-    a = p1[0] - p2[0];
-    b = p1[1] - p2[1];
-    c = p1[2] - p2[2];
+    a = p1_[0] - p2_[0];
+    b = p1_[1] - p2_[1];
+    c = p1_[2] - p2_[2];
 
-    d = p1[0] - p3[0];
-    e = p1[1] - p3[1];
-    f = p1[2] - p3[2];
+    d = p1_[0] - p3_[0];
+    e = p1_[1] - p3_[1];
+    f = p1_[2] - p3_[2];
 
     g = rayDir[0];
     h = rayDir[1];
@@ -59,9 +59,9 @@ namespace raytracer {
        |j|   |xa - xe|
        |k| = |ya - ye|
        |l|   |za - ze| */
-    j = p1[0] - rayOrig[0];
-    k = p1[1] - rayOrig[1];
-    l = p1[2] - rayOrig[2];
+    j = p1_[0] - rayOrig[0];
+    k = p1_[1] - rayOrig[1];
+    l = p1_[2] - rayOrig[2];
     /* M = a(ei - hf) + b(gf - di) + c(dh - eg) */
     M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
 

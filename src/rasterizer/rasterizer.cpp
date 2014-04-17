@@ -21,16 +21,18 @@ namespace rasterizer {
     png::image<png::rgb_pixel> image_data(m_width, m_height);
     Vector3D color;
 
-    Matrix4x4 transform = generateTransform();
+    Matrix4x4 transform_matrix = generateTransform();
 
     Triangle *cur_triangle;
     for(int i = 0; i < m_triangles.size(); i++) {
       cur_triangle = &m_triangles[i];
+      //NEXT STEP
+      need to multiply all vertices in triangle by transform_matrix;
+      put results into fragment array?;
+      //NEXT STEP
 
-      // for(int j = 0; j < VERTICES_PER_TRIANGLE; j++){
-      // 	//scaleVertex(cur_triangle);
-      // }
     }
+
     // image_data[y][x] = png::rgb_pixel(color[0] * 255, color[1] * 255,
     // 				     color[2] * 255);
     //image_data.write(m_outputFileName);

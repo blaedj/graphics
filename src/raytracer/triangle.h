@@ -28,11 +28,15 @@ namespace raytracer {
     }
 
     double vertices[9];
+    Vector3D getP1(){ return p1_; };
+    Vector3D getP2(){ return p2_; };
+    Vector3D getP3(){ return p3_; };
+
   private:
     void setShader(Shader* sh);
-    Vector3D p1;
-    Vector3D p2;
-    Vector3D p3;
+    Vector3D p1_;
+    Vector3D p2_;
+    Vector3D p3_;
     Vector3D normal;
 
   };
