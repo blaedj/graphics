@@ -201,5 +201,12 @@ namespace rasterizer {
     return vpMatrix;
   }
 
+  const Matrix4x4 Matrix4x4::createPerspectiveMatrix(double n, double f, Matrix4x4 ortho){
+    Matrix4x4 perspective_p(n, 0, 0, 0,
+				 0, n, 0, 0,
+				 0, 0, n+f, -f*n,
+				 0, 0, 1, 0);
+    return perspective_p * ortho;
+  }
 
 }

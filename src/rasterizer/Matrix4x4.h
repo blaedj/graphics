@@ -82,11 +82,14 @@ namespace rasterizer {
     void makeRotationX( const double angle_in_radians );//TODO
     void makeRotationY( const double angle_in_radians );//TODO
     void makeRotationZ( const double angle_in_radians );//TODO
+
     const Matrix4x4 createCameraMatrix(Vector3D U, Vector3D V, Vector3D W, Vector3D camOrigin);
     const Matrix4x4 createOrthoMatrix(double near_bound, double far_bound,
 				      double left_bound, double right_bound,
 				      double top_bound, double bottom_bound);
     const Matrix4x4 createViewPortMatrix(int height, int width);
+
+    const Matrix4x4 createPerspectiveMatrix(double near, double far, Matrix4x4 ortho);
 
   };
 
