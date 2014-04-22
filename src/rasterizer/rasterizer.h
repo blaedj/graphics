@@ -1,7 +1,7 @@
 #ifndef _RASTERIZER_H_
 #define _RASTERIZER_H_
 
-
+#include <algorithm>
 #include "Scene.h"
 #include "handleGraphicsArgs.h"
 #include "shape.h"
@@ -38,6 +38,9 @@ namespace rasterizer {
     string m_outputFileName;
     double m_focal_length;
     Matrix4x4 generateTransform();
+    void transform_verts(Triangle *tri, Matrix4x4 transform);
+    Vector3D computeColor(int x, int y, Triangle *tri);
+    bool isInTriangle(int x, int y, Triangle *tri);
   };
 
 }

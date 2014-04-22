@@ -111,7 +111,23 @@ namespace rasterizer {
   }
 
   const Vector3D Matrix4x4::multVector(const Vector3D &v, const double w) const {
-    return Vector3D(v[0]*w, v[1]*w, v[2]*w);
+    //    return Vector3D(v[0]*w, v[1]*w, v[2]*w);
+    double result[4];
+    double vec1x4[4];
+    vec1x4[0] = v[0];
+    vec1x4[1] = v[1];
+    vec1x4[2] = v[2];
+    vec1x4[3] = w;
+
+    for(int i = 0; i < 4; i++) {
+      result[i] = vec1x4[0] * d[0][i] + vec1x4[1]*d[1][i] + vec1x4[2]*d[2][i] + vec1x4[3]*d[3][i];
+    }
+
+    Vector3D vec(result[0], result[1], result[2]);
+
+    // cout << "param 'v' in multVect:" << v << endl;
+    // cout << "vec in multVector is: " << vec << endl;
+    return vec;
   }
 
   double Matrix4x4::determinant() const {
@@ -185,7 +201,11 @@ namespace rasterizer {
   const Matrix4x4 Matrix4x4::createOrthoMatrix(double near_bound, double far_bound,
 					       double left_bound, double right_bound,
 					       double top_bound, double bottom_bound){
+    //TODO: error creating ortho_matrix, a34 comes out as -infinity.
 
+    cout << "near_bound :" << near_bound << endl;
+
+    cout << "far_bound :" << far_bound << endl;
     Matrix4x4 ortho(2.0/right_bound - left_bound, 0, 0, -(right_bound + left_bound)/right_bound - left_bound,
 		    0, 2.0 / top_bound - bottom_bound, 0, -(top_bound + bottom_bound)/top_bound - bottom_bound,
 		    0, 0, 2.0/(near_bound - far_bound), -(near_bound + far_bound)/near_bound - far_bound,
@@ -201,12 +221,13 @@ namespace rasterizer {
     return vpMatrix;
   }
 
-  const Matrix4x4 Matrix4x4::createPerspectiveMatrix(double n, double f, Matrix4x4 ortho){
+  const Matrix4x4 Matrix4x4::createPerspectiveMatrix(double n, double f, Matrix4x4 ortho){//need inverse 'p' matrix instead?
     Matrix4x4 perspective_p(n, 0, 0, 0,
-				 0, n, 0, 0,
-				 0, 0, n+f, -f*n,
-				 0, 0, 1, 0);
-    return perspective_p * ortho;
+			    0, n, 0, 0,
+			    0, 0, n+f, -f*n,
+			    0, 0, 1, 0);
+    return ortho * perspective_p;
+
   }
 
 }

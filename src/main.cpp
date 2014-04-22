@@ -61,10 +61,8 @@ int main(int argc, char *argv[])
   string filename = args.inputFileName;
 
 #if 1
-  //runTests(args);
   clock_t init, final;
   init=clock();
-
 
   XMLSceneParser xmlParser;
 
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
 #endif
   //TESTING/////
   /*  matrixTests();
-  testVectMult();
+   testVectMult();/*
   test3x3Determ();
   test4x4Determ();*/
   //testCofactor();
@@ -123,9 +121,16 @@ void matrixTests() {
 }
 
 void testVectMult(){
-  Matrix4x4 matr;
-  Vector3D result = matr.multVector(Vector3D(1,1,1), 5.0);
-  cout << "[1 1 1] vector times 5:"
+  Matrix4x4 matr(1, 2, 3, 4,
+		 2, 2, 2, 2,
+		 1, 2, 3, 4,
+		 3, 3, 3, 3);
+  Vector3D vect(1, 2, 3);
+  double w = 1.0;
+
+  Vector3D result;
+  result = matr.multVector(vect, w);
+  cout << vect << "vector times matrix:"
        << "\n" << result << "\n";
 }
 

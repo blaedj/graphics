@@ -66,6 +66,7 @@ namespace rasterizer {
     void setIdentity(void);//DONE
 
     const Matrix4x4 operator*(const Matrix4x4 &) const;//DONE
+
     const sivelab::Vector3D multVector(const sivelab::Vector3D &v, const double w) const;//DONE
 
     double determinant(void) const;//DONE

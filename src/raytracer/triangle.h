@@ -32,6 +32,10 @@ namespace raytracer {
     Vector3D getP2(){ return p2_; };
     Vector3D getP3(){ return p3_; };
 
+    void setP1(Vector3D d){ p1_.set(d[0], d[1], d[2]); };
+    void setP2(Vector3D d){ p2_.set(d[0], d[1], d[2]); };
+    void setP3(Vector3D d){ p3_.set(d[0], d[1], d[2]); };
+
   private:
     void setShader(Shader* sh);
     Vector3D p1_;
